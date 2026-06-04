@@ -1040,18 +1040,16 @@ footer {
       <p class="section-sub">Tandem is launching soon. Join the waitlist and get early access, founding member pricing, and a say in what we build next.</p>
 
       <div class="newsletter-form-container">
-        <form class="newsletter-form" action="https://app.loops.so/api/newsletter-form/cmpzg5wry029u0jxhh71yep34" method="POST">
-          <input class="newsletter-form-input" placeholder="your@email.com" required type="email" name="email" />
-          <button type="submit" class="newsletter-form-button">Join the Waitlist</button>
-          <button type="button" class="newsletter-loading-button" style="display:none;">Please wait...</button>
+        <form class="newsletter-form" id="loopsForm">
+          <input class="newsletter-form-input" id="loopsEmail" placeholder="your@email.com" required type="email" name="email" />
+          <button type="submit" class="newsletter-form-button" id="loopsSubmit">Join the Waitlist</button>
         </form>
-        <div class="newsletter-success" style="display:none; align-items:center; justify-content:center; width:100%;">
+        <div class="newsletter-success" id="loopsSuccess" style="display:none; align-items:center; justify-content:center; width:100%;">
           <p class="newsletter-success-message">You're on the list. We'll be in touch soon.</p>
         </div>
-        <div class="newsletter-error" style="display:none; align-items:center; justify-content:center; width:100%;">
-          <p class="newsletter-error-message">Oops! Something went wrong, please try again</p>
+        <div class="newsletter-error" id="loopsError" style="display:none; align-items:center; justify-content:center; width:100%;">
+          <p class="newsletter-error-message" id="loopsErrorMsg">Oops! Something went wrong, please try again</p>
         </div>
-        <button class="newsletter-back-button" type="button" style="display:none; margin:10px auto; background:transparent; border:none; cursor:pointer;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">← Back</button>
       </div>
 
       <p class="waitlist-note">No spam. Unsubscribe anytime. We hate hidden clauses too.</p>
@@ -1066,92 +1064,44 @@ footer {
 </footer>
 
 <script>
-function submitHandler(event) {
-  event.preventDefault();
-  var container = event.target.parentNode;
-  var form = container.querySelector(".newsletter-form");
-  var formInput = container.querySelector(".newsletter-form-input");
-  var success = container.querySelector(".newsletter-success");
-  var errorContainer = container.querySelector(".newsletter-error");
-  var errorMessage = container.querySelector(".newsletter-error-message");
-  var backButton = container.querySelector(".newsletter-back-button");
-  var submitButton = container.querySelector(".newsletter-form-button");
-  var loadingButton = container.querySelector(".newsletter-loading-button");
+// Loops waitlist form
+document.getElementById('loopsForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  var email = document.getElementById('loopsEmail').value.trim();
+  var btn = document.getElementById('loopsSubmit');
+  var success = document.getElementById('loopsSuccess');
+  var error = document.getElementById('loopsError');
+  var errorMsg = document.getElementById('loopsErrorMsg');
 
-  const rateLimit = () => {
-    errorContainer.style.display = "flex";
-    errorMessage.innerText = "Too many signups, please try again in a little while";
-    submitButton.style.display = "none";
-    formInput.style.display = "none";
-    backButton.style.display = "block";
-  };
+  btn.textContent = 'Please wait...';
+  btn.disabled = true;
 
-  var time = new Date();
-  var timestamp = time.valueOf();
-  var previousTimestamp = localStorage.getItem("loops-form-timestamp");
-  if (previousTimestamp && Number(previousTimestamp) + 60000 > timestamp) { rateLimit(); return; }
-  localStorage.setItem("loops-form-timestamp", timestamp);
-
-  submitButton.style.display = "none";
-  loadingButton.style.display = "flex";
-
-  var formBody = "email=" + encodeURIComponent(formInput.value);
-
-  fetch(event.target.action, {
-    method: "POST",
-    body: formBody,
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+  fetch('https://app.loops.so/api/newsletter-form/cmpzg5wry029u0jxhh71yep34', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email: email })
   })
-    .then((res) => [res.ok, res.json(), res])
-    .then(([ok, dataPromise, res]) => {
-      if (ok) {
-        success.style.display = "flex";
-        form.reset();
-      } else {
-        dataPromise.then(data => {
-          errorContainer.style.display = "flex";
-          errorMessage.innerText = data.message ? data.message : res.statusText;
-        });
-      }
-    })
-    .catch(error => {
-      if (error.message === "Failed to fetch") { rateLimit(); return; }
-      errorContainer.style.display = "flex";
-      if (error.message) errorMessage.innerText = error.message;
-      localStorage.setItem("loops-form-timestamp", '');
-    })
-    .finally(() => {
-      formInput.style.display = "none";
-      loadingButton.style.display = "none";
-      backButton.style.display = "block";
-    });
-}
+  .then(function(res) { return res.json(); })
+  .then(function(data) {
+    if (data.success) {
+      document.getElementById('loopsForm').style.display = 'none';
+      success.style.display = 'flex';
+    } else {
+      error.style.display = 'flex';
+      errorMsg.textContent = data.message || 'Something went wrong, please try again';
+      btn.textContent = 'Join the Waitlist';
+      btn.disabled = false;
+    }
+  })
+  .catch(function() {
+    error.style.display = 'flex';
+    errorMsg.textContent = 'Something went wrong, please try again';
+    btn.textContent = 'Join the Waitlist';
+    btn.disabled = false;
+  });
+});
 
-function resetFormHandler(event) {
-  var container = event.target.parentNode;
-  var formInput = container.querySelector(".newsletter-form-input");
-  var success = container.querySelector(".newsletter-success");
-  var errorContainer = container.querySelector(".newsletter-error");
-  var errorMessage = container.querySelector(".newsletter-error-message");
-  var backButton = container.querySelector(".newsletter-back-button");
-  var submitButton = container.querySelector(".newsletter-form-button");
-  success.style.display = "none";
-  errorContainer.style.display = "none";
-  errorMessage.innerText = "Oops! Something went wrong, please try again";
-  backButton.style.display = "none";
-  formInput.style.display = "flex";
-  submitButton.style.display = "flex";
-}
-
-var formContainers = document.getElementsByClassName("newsletter-form-container");
-for (var i = 0; i < formContainers.length; i++) {
-  var formContainer = formContainers[i];
-  if (formContainer.classList.contains('newsletter-handlers-added')) continue;
-  formContainer.querySelector(".newsletter-form").addEventListener("submit", submitHandler);
-  formContainer.querySelector(".newsletter-back-button").addEventListener("click", resetFormHandler);
-  formContainer.classList.add("newsletter-handlers-added");
-}
-
+// Scroll animations
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(e => {
     if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
