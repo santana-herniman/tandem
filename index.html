@@ -1041,7 +1041,7 @@ footer {
 
       <div class="newsletter-form-container">
         <form class="newsletter-form" action="https://app.loops.so/api/newsletter-form/cmpzg5wry029u0jxhh71yep34" method="POST">
-          <input class="newsletter-form-input" placeholder="your@email.com" required type="email" name="newsletter-form-input" />
+          <input class="newsletter-form-input" placeholder="your@email.com" required type="email" name="email" />
           <button type="submit" class="newsletter-form-button">Join the Waitlist</button>
           <button type="button" class="newsletter-loading-button" style="display:none;">Please wait...</button>
         </form>
@@ -1095,7 +1095,7 @@ function submitHandler(event) {
   submitButton.style.display = "none";
   loadingButton.style.display = "flex";
 
-  var formBody = "userGroup=&mailingLists=&email=" + encodeURIComponent(formInput.value);
+  var formBody = "email=" + encodeURIComponent(formInput.value);
 
   fetch(event.target.action, {
     method: "POST",
