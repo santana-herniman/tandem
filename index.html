@@ -999,13 +999,78 @@ footer {
       <div class="section-tag" style="text-align:center;">Early access</div>
       <h2>Be the first to<br><em>know more</em></h2>
       <p class="section-sub">Tandem is launching soon. Join the waitlist and get early access, founding member pricing, and a say in what we build next.</p>
-      <div class="waitlist-form" id="waitlistForm">
-        <input class="waitlist-input" id="emailInput" type="email" placeholder="your@email.com" />
-        <button class="btn-primary" onclick="joinWaitlist()">Join waitlist</button>
+      <style>
+        .newsletter-form-container { width: 100%; max-width: 480px; margin: 0 auto 16px; }
+        .newsletter-form { display: flex; gap: 10px; width: 100%; }
+        .newsletter-form-input {
+          flex: 1;
+          height: 52px !important;
+          background: var(--surface) !important;
+          border: 1px solid var(--border-strong) !important;
+          border-radius: 4px !important;
+          padding: 0 18px !important;
+          font-family: 'Epilogue', sans-serif !important;
+          font-size: 15px !important;
+          color: var(--cream) !important;
+          outline: none !important;
+          box-shadow: none !important;
+          max-width: none !important;
+          min-width: 0 !important;
+          margin: 0 !important;
+          width: auto !important;
+          transition: border-color 0.2s;
+        }
+        .newsletter-form-input::placeholder { color: var(--cream-faint) !important; }
+        .newsletter-form-input:focus { border-color: var(--accent) !important; }
+        .newsletter-form-button, .newsletter-loading-button {
+          height: 52px !important;
+          background: var(--accent) !important;
+          color: var(--ink) !important;
+          border: none !important;
+          border-radius: 4px !important;
+          font-family: 'Epilogue', sans-serif !important;
+          font-size: 15px !important;
+          font-weight: 500 !important;
+          padding: 0 28px !important;
+          cursor: pointer !important;
+          white-space: nowrap !important;
+          max-width: none !important;
+          width: auto !important;
+          box-shadow: none !important;
+          transition: background 0.2s !important;
+          flex-shrink: 0;
+        }
+        .newsletter-form-button:hover { background: #f0d060 !important; }
+        .newsletter-success { justify-content: center; }
+        .newsletter-success-message {
+          font-family: 'Epilogue', sans-serif !important;
+          color: var(--safe) !important;
+          font-size: 15px !important;
+          padding: 14px 20px;
+          background: rgba(74,170,110,0.08);
+          border: 1px solid rgba(74,170,110,0.2);
+          border-radius: 4px;
+        }
+        .newsletter-error-message {
+          font-family: 'Epilogue', sans-serif !important;
+          font-size: 14px !important;
+        }
+        .newsletter-back-button {
+          color: var(--cream-faint) !important;
+          font-family: 'Epilogue', sans-serif !important;
+          font-size: 13px !important;
+        }
+        @media (max-width: 600px) {
+          .newsletter-form { flex-direction: column; }
+          .newsletter-form-input { width: 100% !important; }
+          .newsletter-form-button, .newsletter-loading-button { width: 100% !important; }
+        }
+      </style>
+
+      <style>@import url('https://fonts.googleapis.com/css2?family=Inter,family=Open+Sans&display=swap');</style><div class="newsletter-form-container"><form class="newsletter-form" action="https://app.loops.so/api/newsletter-form/cmpzg5wry029u0jxhh71yep34" method="POST" style="display: flex; flex-direction: row; align-items: center; justify-content: center; width: 100%;"><input class="newsletter-form-input" placeholder="your@email.com" required="" type="email" name="newsletter-form-input"><button type="submit" class="newsletter-form-button">Join Waitlist</button><button type="button" class="newsletter-loading-button" style="display:none;">Please wait...</button></form><div class="newsletter-success" style="display: none; align-items: center; justify-content: center; width: 100%;"><p class="newsletter-success-message">✓ You're on the list. We'll be in touch soon.</p></div><div class="newsletter-error" style="display: none; align-items: center; justify-content: center; width: 100%;"><p class="newsletter-error-message" style="font-family: 'Open Sans', sans-serif; color: rgb(185, 28, 28); font-size: 14px;">Oops! Something went wrong, please try again</p></div>
+      <button class='newsletter-back-button' type='button' style='color:#6b7280;font: 14px, Inter, sans-serif;margin:10px auto;text-align:center;display:none;background:transparent;border:none;cursor:pointer' onmouseout='this.style.textDecoration="none"' onmouseover='this.style.textDecoration="underline"'>&larr; Back</button>
       </div>
-      <div class="success-msg" id="successMsg">
-        ✓ You're on the list. We'll be in touch soon.
-      </div>
+
       <p class="waitlist-note">No spam. Unsubscribe anytime. We hate hidden clauses too.</p>
     </div>
   </div>
@@ -1018,16 +1083,6 @@ footer {
 </footer>
 
 <script>
-function joinWaitlist() {
-  const email = document.getElementById('emailInput').value.trim();
-  if (!email || !email.includes('@')) {
-    document.getElementById('emailInput').style.borderColor = 'var(--danger)';
-    return;
-  }
-  document.getElementById('waitlistForm').style.display = 'none';
-  document.getElementById('successMsg').style.display = 'block';
-}
-
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(e => {
     if (e.isIntersecting) {
