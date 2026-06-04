@@ -999,78 +999,137 @@ footer {
       <div class="section-tag" style="text-align:center;">Early access</div>
       <h2>Be the first to<br><em>know more</em></h2>
       <p class="section-sub">Tandem is launching soon. Join the waitlist and get early access, founding member pricing, and a say in what we build next.</p>
+      
       <style>
         .newsletter-form-container { width: 100%; max-width: 480px; margin: 0 auto 16px; }
-        .newsletter-form { display: flex; gap: 10px; width: 100%; }
+        .newsletter-form { display: flex !important; flex-direction: row !important; gap: 10px !important; align-items: center !important; justify-content: center !important; width: 100% !important; }
         .newsletter-form-input {
-          flex: 1;
-          height: 52px !important;
-          background: var(--surface) !important;
-          border: 1px solid var(--border-strong) !important;
-          border-radius: 4px !important;
-          padding: 0 18px !important;
-          font-family: 'Epilogue', sans-serif !important;
-          font-size: 15px !important;
-          color: var(--cream) !important;
-          outline: none !important;
-          box-shadow: none !important;
-          max-width: none !important;
-          min-width: 0 !important;
-          margin: 0 !important;
-          width: auto !important;
-          transition: border-color 0.2s;
+          flex: 1 !important; height: 52px !important;
+          background: #111520 !important; border: 1px solid rgba(245,240,232,0.2) !important;
+          border-radius: 4px !important; padding: 0 18px !important;
+          font-family: 'Epilogue', sans-serif !important; font-size: 15px !important;
+          color: #f5f0e8 !important; outline: none !important; box-shadow: none !important;
+          max-width: none !important; min-width: 0 !important; margin: 0 !important;
+          width: auto !important; box-sizing: border-box !important;
         }
-        .newsletter-form-input::placeholder { color: var(--cream-faint) !important; }
-        .newsletter-form-input:focus { border-color: var(--accent) !important; }
+        .newsletter-form-input::placeholder { color: #7a7060 !important; }
+        .newsletter-form-input:focus { border-color: #e8c547 !important; }
         .newsletter-form-button, .newsletter-loading-button {
-          height: 52px !important;
-          background: var(--accent) !important;
-          color: var(--ink) !important;
-          border: none !important;
-          border-radius: 4px !important;
-          font-family: 'Epilogue', sans-serif !important;
-          font-size: 15px !important;
-          font-weight: 500 !important;
-          padding: 0 28px !important;
-          cursor: pointer !important;
-          white-space: nowrap !important;
-          max-width: none !important;
-          width: auto !important;
-          box-shadow: none !important;
-          transition: background 0.2s !important;
-          flex-shrink: 0;
+          height: 52px !important; background: #e8c547 !important; color: #0a0e1a !important;
+          border: none !important; border-radius: 4px !important;
+          font-family: 'Epilogue', sans-serif !important; font-size: 15px !important;
+          font-weight: 500 !important; padding: 0 28px !important; cursor: pointer !important;
+          white-space: nowrap !important; max-width: none !important; width: auto !important;
+          box-shadow: none !important; flex-shrink: 0 !important;
         }
         .newsletter-form-button:hover { background: #f0d060 !important; }
-        .newsletter-success { justify-content: center; }
+        .newsletter-success { justify-content: center !important; }
         .newsletter-success-message {
-          font-family: 'Epilogue', sans-serif !important;
-          color: var(--safe) !important;
-          font-size: 15px !important;
-          padding: 14px 20px;
-          background: rgba(74,170,110,0.08);
-          border: 1px solid rgba(74,170,110,0.2);
-          border-radius: 4px;
+          font-family: 'Epilogue', sans-serif !important; color: #4aaa6e !important;
+          font-size: 15px !important; padding: 14px 20px !important;
+          background: rgba(74,170,110,0.08) !important; border: 1px solid rgba(74,170,110,0.2) !important;
+          border-radius: 4px !important;
         }
-        .newsletter-error-message {
-          font-family: 'Epilogue', sans-serif !important;
-          font-size: 14px !important;
-        }
-        .newsletter-back-button {
-          color: var(--cream-faint) !important;
-          font-family: 'Epilogue', sans-serif !important;
-          font-size: 13px !important;
-        }
+        .newsletter-error-message { font-family: 'Epilogue', sans-serif !important; font-size: 14px !important; }
+        .newsletter-back-button { color: #7a7060 !important; font-family: 'Epilogue', sans-serif !important; font-size: 13px !important; }
         @media (max-width: 600px) {
-          .newsletter-form { flex-direction: column; }
-          .newsletter-form-input { width: 100% !important; }
-          .newsletter-form-button, .newsletter-loading-button { width: 100% !important; }
+          .newsletter-form { flex-direction: column !important; }
+          .newsletter-form-button, .newsletter-loading-button { width: 100% !important; height: 48px !important; }
         }
       </style>
-
-      <style>@import url('https://fonts.googleapis.com/css2?family=Inter,family=Open+Sans&display=swap');</style><div class="newsletter-form-container"><form class="newsletter-form" action="https://app.loops.so/api/newsletter-form/cmpzg5wry029u0jxhh71yep34" method="POST" style="display: flex; flex-direction: row; align-items: center; justify-content: center; width: 100%;"><input class="newsletter-form-input" placeholder="your@email.com" required="" type="email" name="email"><button type="submit" class="newsletter-form-button">Join Waitlist</button><button type="button" class="newsletter-loading-button" style="display:none;">Please wait...</button></form><div class="newsletter-success" style="display: none; align-items: center; justify-content: center; width: 100%;"><p class="newsletter-success-message">✓ You're on the list. We'll be in touch soon.</p></div><div class="newsletter-error" style="display: none; align-items: center; justify-content: center; width: 100%;"><p class="newsletter-error-message" style="font-family: 'Open Sans', sans-serif; color: rgb(185, 28, 28); font-size: 14px;">Oops! Something went wrong, please try again</p></div>
-      <button class='newsletter-back-button' type='button' style='color:#6b7280;font: 14px, Inter, sans-serif;margin:10px auto;text-align:center;display:none;background:transparent;border:none;cursor:pointer' onmouseout='this.style.textDecoration="none"' onmouseover='this.style.textDecoration="underline"'>&larr; Back</button>
-      </div>
-
+      <style>@import url('https://fonts.googleapis.com/css2?family=Inter,family=Open+Sans&display=swap');</style><div class="newsletter-form-container"><form class="newsletter-form" action="https://app.loops.so/api/newsletter-form/cmpzg5wry029u0jxhh71yep34" method="POST" style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;"><input class="newsletter-form-input" placeholder="your@email.com" required="" type="email" name="newsletter-form-input" style="font-family: 'Open Sans', sans-serif; color: rgb(0, 0, 0); font-size: 14px; margin: 0px 0px 10px; width: 100%; max-width: 300px; min-width: 100px; background: rgb(255, 255, 255); border: 1px solid rgb(209, 213, 219); box-sizing: border-box; box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 2px; border-radius: 6px; padding: 8px 12px;"><button type="submit" class="newsletter-form-button" style="background: rgb(232, 197, 71); font-size: 14px; color: rgb(17, 21, 32); font-family: Inter, sans-serif; display: flex; width: 100%; max-width: 300px; white-space: normal; height: 38px; align-items: center; justify-content: center; flex-direction: row; padding: 9px 17px; box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 2px; border-radius: 6px; text-align: center; font-style: normal; font-weight: 500; line-height: 20px; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; cursor: pointer;">Join Waitlist</button><button type="button" class="newsletter-loading-button" style="background: rgb(232, 197, 71); font-size: 14px; color: rgb(17, 21, 32); font-family: Inter, sans-serif; display: none; width: 100%; max-width: 300px; white-space: normal; height: 38px; align-items: center; justify-content: center; flex-direction: row; padding: 9px 17px; box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 2px; border-radius: 6px; text-align: center; font-style: normal; font-weight: 500; line-height: 20px; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; cursor: pointer;">Please wait...</button></form><div class="newsletter-success" style="display: none; align-items: center; justify-content: center; width: 100%;"><p class="newsletter-success-message" style="font-family: 'Open Sans', sans-serif; color: rgb(232, 197, 71); font-size: 14px;">Thanks! We'll be in touch!</p></div><div class="newsletter-error" style="display: none; align-items: center; justify-content: center; width: 100%;"><p class="newsletter-error-message" style="font-family: 'Open Sans', sans-serif; color: rgb(185, 28, 28); font-size: 14px;">Oops! Something went wrong, please try again</p></div>
+<button 
+class='newsletter-back-button'
+type='button' 
+style='color:#6b7280;font: 14px, Inter, sans-serif;margin:10px auto;text-align:center;display:none;background:transparent;border:none;cursor:pointer'
+onmouseout='this.style.textDecoration="none"' 
+onmouseover='this.style.textDecoration="underline"'>
+&larr; Back
+</button>
+</div><script>
+function submitHandler(event) {
+  event.preventDefault();
+  var container = event.target.parentNode;
+  var form = container.querySelector(".newsletter-form");
+  var formInput = container.querySelector(".newsletter-form-input");
+  var success = container.querySelector(".newsletter-success");
+  var errorContainer = container.querySelector(".newsletter-error");
+  var errorMessage = container.querySelector(".newsletter-error-message");
+  var backButton = container.querySelector(".newsletter-back-button");
+  var submitButton = container.querySelector(".newsletter-form-button");
+  var loadingButton = container.querySelector(".newsletter-loading-button");
+  const rateLimit = () => {
+    errorContainer.style.display = "flex";
+    errorMessage.innerText = "Too many signups, please try again in a little while";
+    submitButton.style.display = "none";
+    formInput.style.display = "none";
+    backButton.style.display = "block";
+  }
+  var time = new Date();
+  var timestamp = time.valueOf();
+  var previousTimestamp = localStorage.getItem("loops-form-timestamp");
+  if (previousTimestamp && Number(previousTimestamp) + 60000 > timestamp) {
+    rateLimit();
+    return;
+  }
+  localStorage.setItem("loops-form-timestamp", timestamp);
+  submitButton.style.display = "none";
+  loadingButton.style.display = "flex";
+  var formBody = "userGroup=&mailingLists=&email=" + encodeURIComponent(formInput.value);
+  fetch(event.target.action, {
+    method: "POST",
+    body: formBody,
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+  })
+    .then((res) => [res.ok, res.json(), res])
+    .then(([ok, dataPromise, res]) => {
+      if (ok) {
+        success.style.display = "flex";
+        form.reset();
+      } else {
+        dataPromise.then(data => {
+          errorContainer.style.display = "flex";
+          errorMessage.innerText = data.message ? data.message : res.statusText;
+        });
+      }
+    })
+    .catch(error => {
+      if (error.message === "Failed to fetch") { rateLimit(); return; }
+      errorContainer.style.display = "flex";
+      if (error.message) errorMessage.innerText = error.message;
+      localStorage.setItem("loops-form-timestamp", '');
+    })
+    .finally(() => {
+      formInput.style.display = "none";
+      loadingButton.style.display = "none";
+      backButton.style.display = "block";
+    });
+}
+function resetFormHandler(event) {
+  var container = event.target.parentNode;
+  var formInput = container.querySelector(".newsletter-form-input");
+  var success = container.querySelector(".newsletter-success");
+  var errorContainer = container.querySelector(".newsletter-error");
+  var errorMessage = container.querySelector(".newsletter-error-message");
+  var backButton = container.querySelector(".newsletter-back-button");
+  var submitButton = container.querySelector(".newsletter-form-button");
+  success.style.display = "none";
+  errorContainer.style.display = "none";
+  errorMessage.innerText = "Oops! Something went wrong, please try again";
+  backButton.style.display = "none";
+  formInput.style.display = "flex";
+  submitButton.style.display = "flex";
+}
+var formContainers = document.getElementsByClassName("newsletter-form-container");
+for (var i = 0; i < formContainers.length; i++) {
+  var formContainer = formContainers[i];
+  var handlersAdded = formContainer.classList.contains('newsletter-handlers-added');
+  if (handlersAdded) continue;
+  formContainer.querySelector(".newsletter-form").addEventListener("submit", submitHandler);
+  formContainer.querySelector(".newsletter-back-button").addEventListener("click", resetFormHandler);
+  formContainer.classList.add("newsletter-handlers-added");
+}
+</script>
       <p class="waitlist-note">No spam. Unsubscribe anytime. We hate hidden clauses too.</p>
     </div>
   </div>
