@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tandem — Know What You're Signing</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Epilogue:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink: #0a0e1a;
+  --cream: #f5f0e8;
+  --cream-dim: #c8bfa8;
+  --cream-faint: #7a7060;
+  --accent: #e8c547;
+  --accent-dim: #b8983a;
+  --surface: #111520;
+  --surface-alt: #181d2e;
+  --border: rgba(245,240,232,0.1);
+  --border-strong: rgba(245,240,232,0.2);
+  --danger: #e85c4a;
+  --warn: #e8a234;
+  --safe: #4aaa6e;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Epilogue', sans-serif;
+  background: var(--ink);
+  color: var(--cream);
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* NAV */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 20px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(10,14,26,0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--cream);
+  letter-spacing: -0.02em;
+}
+
+.nav-logo span { color: var(--accent); }
+
+.nav-links { display: flex; align-items: center; gap: 32px; }
+.nav-links a {
+  font-size: 14px;
+  color: var(--cream-dim);
+  text-decoration: none;
+  font-weight: 400;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--cream); }
+
+.nav-cta {
+  background: var(--accent) !important;
+  color: var(--ink) !important;
+  padding: 10px 22px;
+  border-radius: 4px;
+  font-weight: 500 !important;
+  font-size: 14px !important;
+}
+
+/* HERO */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 120px 48px 80px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 70% 50%, rgba(232,197,71,0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 60% at 20% 80%, rgba(74,170,110,0.04) 0%, transparent 60%);
+}
+
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(245,240,232,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(245,240,232,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+.hero-content {
+  position: relative;
+  max-width: 1100px;
+  margin: 0 auto;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 80px;
+  align-items: center;
+}
+
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--accent);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+  padding: 6px 14px;
+  border: 1px solid rgba(232,197,71,0.3);
+  border-radius: 99px;
+}
+
+.hero-eyebrow::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+}
+
+h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(42px, 5vw, 68px);
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: var(--cream);
+  margin-bottom: 24px;
+}
+
+h1 em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.hero-sub {
+  font-size: 18px;
+  color: var(--cream-dim);
+  font-weight: 300;
+  max-width: 480px;
+  margin-bottom: 40px;
+  line-height: 1.7;
+}
+
+.hero-actions { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+
+.btn-primary {
+  background: var(--accent);
+  color: var(--ink);
+  padding: 16px 32px;
+  border-radius: 4px;
+  font-size: 15px;
+  font-weight: 500;
+  font-family: 'Epilogue', sans-serif;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+  letter-spacing: 0.01em;
+}
+
+.btn-primary:hover { background: #f0d060; transform: translateY(-1px); }
+
+.btn-ghost {
+  color: var(--cream-dim);
+  padding: 16px 24px;
+  font-size: 15px;
+  font-weight: 400;
+  font-family: 'Epilogue', sans-serif;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 0.2s;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+.btn-ghost:hover { color: var(--cream); }
+
+/* HERO CARD */
+.hero-card {
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  overflow: hidden;
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.card-top {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.card-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+.card-title-bar {
+  font-size: 12px;
+  color: var(--cream-faint);
+  margin-left: 6px;
+}
+
+.card-body { padding: 20px; }
+
+.doc-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--cream-dim);
+  background: rgba(245,240,232,0.06);
+  padding: 4px 10px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+}
+
+.flag-item {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 10px 12px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.flag-item.danger { background: rgba(232,92,74,0.12); color: #f0896f; }
+.flag-item.warn { background: rgba(232,162,52,0.12); color: #f0b85a; }
+.flag-item.safe { background: rgba(74,170,110,0.12); color: #6acc90; }
+
+.flag-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+.danger .flag-dot { background: var(--danger); }
+.warn .flag-dot { background: var(--warn); }
+.safe .flag-dot { background: var(--safe); }
+
+.score-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.score-label { font-size: 11px; color: var(--cream-faint); }
+.score-val {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  color: var(--warn);
+  font-weight: 700;
+}
+.score-track {
+  flex: 1;
+  height: 4px;
+  background: rgba(245,240,232,0.1);
+  border-radius: 99px;
+  margin: 0 12px;
+  overflow: hidden;
+}
+.score-fill {
+  height: 100%;
+  width: 40%;
+  background: var(--warn);
+  border-radius: 99px;
+}
+
+/* SOCIAL PROOF */
+.proof-bar {
+  background: var(--surface-alt);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 20px 48px;
+  display: flex;
+  align-items: center;
+  gap: 48px;
+  overflow-x: auto;
+}
+
+.proof-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.proof-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.proof-text { font-size: 13px; color: var(--cream-faint); }
+
+.proof-divider {
+  width: 1px;
+  height: 32px;
+  background: var(--border);
+  flex-shrink: 0;
+}
+
+/* SECTIONS */
+section { padding: 100px 48px; }
+
+.section-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.section-tag {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--accent);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(32px, 3.5vw, 48px);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--cream);
+  margin-bottom: 20px;
+}
+
+h2 em { font-style: italic; color: var(--accent); }
+
+.section-sub {
+  font-size: 17px;
+  color: var(--cream-dim);
+  font-weight: 300;
+  max-width: 560px;
+  line-height: 1.7;
+}
+
+/* PROBLEM */
+.problem-section { background: var(--surface-alt); }
+
+.problem-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 56px;
+}
+
+.problem-card {
+  padding: 28px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: rgba(10,14,26,0.5);
+  position: relative;
+  overflow: hidden;
+}
+
+.problem-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+}
+
+.problem-card.red::before { background: var(--danger); }
+.problem-card.amber::before { background: var(--warn); }
+.problem-card.green::before { background: var(--safe); }
+
+.problem-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 48px;
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: 12px;
+}
+
+.red .problem-num { color: var(--danger); }
+.amber .problem-num { color: var(--warn); }
+.green .problem-num { color: var(--safe); }
+
+.problem-card h3 {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--cream);
+  margin-bottom: 8px;
+}
+
+.problem-card p {
+  font-size: 14px;
+  color: var(--cream-faint);
+  line-height: 1.65;
+}
+
+/* HOW IT WORKS */
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  margin-top: 56px;
+  position: relative;
+}
+
+.steps::before {
+  content: '';
+  position: absolute;
+  top: 28px;
+  left: calc(16.67% + 20px);
+  right: calc(16.67% + 20px);
+  height: 1px;
+  background: var(--border);
+}
+
+.step-item { text-align: center; }
+
+.step-num-wrap {
+  width: 56px;
+  height: 56px;
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  background: var(--ink);
+  position: relative;
+  z-index: 1;
+}
+
+.step-num-inner {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.step-item h3 {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--cream);
+  margin-bottom: 8px;
+}
+
+.step-item p {
+  font-size: 14px;
+  color: var(--cream-faint);
+  line-height: 1.65;
+}
+
+/* FEATURES */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-top: 56px;
+}
+
+.feature-card {
+  padding: 28px 32px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  transition: border-color 0.2s;
+}
+
+.feature-card:hover { border-color: var(--border-strong); }
+
+.feature-icon {
+  font-size: 28px;
+  margin-bottom: 14px;
+}
+
+.feature-card h3 {
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--cream);
+  margin-bottom: 8px;
+}
+
+.feature-card p {
+  font-size: 14px;
+  color: var(--cream-faint);
+  line-height: 1.7;
+}
+
+/* PRICING */
+.pricing-section { background: var(--surface-alt); }
+
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 56px;
+}
+
+.pricing-card {
+  padding: 32px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--ink);
+  position: relative;
+}
+
+.pricing-card.featured {
+  border-color: var(--accent);
+  background: var(--surface);
+}
+
+.popular-badge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--accent);
+  color: var(--ink);
+  font-size: 11px;
+  font-weight: 500;
+  padding: 4px 14px;
+  border-radius: 99px;
+  white-space: nowrap;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.plan-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--cream-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 12px;
+}
+
+.plan-price {
+  font-family: 'Playfair Display', serif;
+  font-size: 44px;
+  font-weight: 700;
+  color: var(--cream);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.plan-price span {
+  font-family: 'Epilogue', sans-serif;
+  font-size: 18px;
+  font-weight: 300;
+  color: var(--cream-faint);
+}
+
+.plan-desc {
+  font-size: 13px;
+  color: var(--cream-faint);
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.plan-features { list-style: none; margin-bottom: 28px; }
+.plan-features li {
+  font-size: 14px;
+  color: var(--cream-dim);
+  padding: 6px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.plan-features li::before {
+  content: '✓';
+  color: var(--accent);
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+.plan-features li.muted { color: var(--cream-faint); }
+.plan-features li.muted::before { content: '—'; color: var(--cream-faint); }
+
+.plan-btn {
+  width: 100%;
+  padding: 14px;
+  border-radius: 4px;
+  font-family: 'Epilogue', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid var(--border-strong);
+  background: transparent;
+  color: var(--cream);
+  transition: all 0.2s;
+}
+
+.plan-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+.plan-btn.featured-btn {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--ink);
+}
+
+.plan-btn.featured-btn:hover { background: #f0d060; }
+
+/* WAITLIST */
+.waitlist-section {
+  background: var(--ink);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.waitlist-bg {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(232,197,71,0.05) 0%, transparent 70%);
+}
+
+.waitlist-inner {
+  position: relative;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.waitlist-inner h2 { margin-bottom: 16px; }
+.waitlist-inner .section-sub { margin: 0 auto 40px; }
+
+.waitlist-form {
+  display: flex;
+  gap: 10px;
+  max-width: 480px;
+  margin: 0 auto 16px;
+}
+
+.waitlist-input {
+  flex: 1;
+  height: 52px;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 4px;
+  padding: 0 18px;
+  font-family: 'Epilogue', sans-serif;
+  font-size: 15px;
+  color: var(--cream);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.waitlist-input:focus { border-color: var(--accent); }
+.waitlist-input::placeholder { color: var(--cream-faint); }
+
+.waitlist-note {
+  font-size: 13px;
+  color: var(--cream-faint);
+}
+
+.success-msg {
+  display: none;
+  padding: 16px 24px;
+  background: rgba(74,170,110,0.12);
+  border: 1px solid rgba(74,170,110,0.3);
+  border-radius: 6px;
+  color: var(--safe);
+  font-size: 15px;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* FOOTER */
+footer {
+  padding: 40px 48px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.footer-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  color: var(--cream-dim);
+}
+
+.footer-logo span { color: var(--accent); }
+
+.footer-text {
+  font-size: 13px;
+  color: var(--cream-faint);
+}
+
+/* ANIMATIONS */
+.fade-up {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.fade-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 900px) {
+  nav { padding: 16px 24px; }
+  .nav-links { display: none; }
+  .hero { padding: 100px 24px 60px; }
+  .hero-content { grid-template-columns: 1fr; gap: 48px; }
+  .hero-card { display: none; }
+  section { padding: 60px 24px; }
+  .proof-bar { padding: 20px 24px; gap: 28px; }
+  .problem-grid, .pricing-grid { grid-template-columns: 1fr; }
+  .steps { grid-template-columns: 1fr; }
+  .steps::before { display: none; }
+  .features-grid { grid-template-columns: 1fr; }
+  .waitlist-form { flex-direction: column; }
+  footer { flex-direction: column; gap: 12px; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Tandem<span>.</span></div>
+  <div class="nav-links">
+    <a href="#how">How it works</a>
+    <a href="#features">Features</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#waitlist" class="nav-cta">Join waitlist</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div>
+      <div class="hero-eyebrow">AI-powered legal clarity</div>
+      <h1>You deserve to know what you're <em>agreeing to</em></h1>
+      <p class="hero-sub">Tandem reads the fine print so you don't have to. Paste any terms & conditions and get a plain-English breakdown, red flag alerts, and answers to your questions — in seconds.</p>
+      <div class="hero-actions">
+        <a href="#waitlist" class="btn-primary">
+          Join the waitlist
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a href="#how" class="btn-ghost">See how it works →</a>
+      </div>
+    </div>
+    <div class="hero-card">
+      <div class="card-top">
+        <div class="card-dot" style="background:#e85c4a;"></div>
+        <div class="card-dot" style="background:#e8a234;"></div>
+        <div class="card-dot" style="background:#4aaa6e;"></div>
+        <span class="card-title-bar">Tandem — analysing document</span>
+      </div>
+      <div class="card-body">
+        <div class="doc-badge">📄 Netflix Terms of Service</div>
+        <div class="flag-item danger">
+          <div class="flag-dot"></div>
+          They can cancel your account at any time without refund
+        </div>
+        <div class="flag-item danger">
+          <div class="flag-dot"></div>
+          Arbitration clause — you waive your right to sue in court
+        </div>
+        <div class="flag-item warn">
+          <div class="flag-dot"></div>
+          Auto-renews monthly — cancellation must be before billing date
+        </div>
+        <div class="flag-item warn">
+          <div class="flag-dot"></div>
+          They can change terms anytime with 30 days notice
+        </div>
+        <div class="flag-item safe">
+          <div class="flag-dot"></div>
+          No selling of personal data to third parties
+        </div>
+        <div class="score-row">
+          <div>
+            <div class="score-label">Fairness score</div>
+            <div class="score-val">4.2</div>
+          </div>
+          <div class="score-track">
+            <div class="score-fill"></div>
+          </div>
+          <div style="font-size:12px; color:var(--cream-faint);">out of 10</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROOF BAR -->
+<div class="proof-bar">
+  <div class="proof-item">
+    <div class="proof-num">91%</div>
+    <div class="proof-text">of people never read T&Cs</div>
+  </div>
+  <div class="proof-divider"></div>
+  <div class="proof-item">
+    <div class="proof-num">32 pages</div>
+    <div class="proof-text">average length of a privacy policy</div>
+  </div>
+  <div class="proof-divider"></div>
+  <div class="proof-item">
+    <div class="proof-num">250 hrs</div>
+    <div class="proof-text">to read every T&C you agree to yearly</div>
+  </div>
+  <div class="proof-divider"></div>
+  <div class="proof-item">
+    <div class="proof-num">30 sec</div>
+    <div class="proof-text">for Tandem to decode any document</div>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section class="problem-section" id="problem">
+  <div class="section-inner">
+    <div class="section-tag">The problem</div>
+    <h2>The system is designed<br>to <em>confuse you</em></h2>
+    <p class="section-sub">Companies spend millions making legal documents intentionally complex. You're expected to sign anyway. That changes now.</p>
+    <div class="problem-grid">
+      <div class="problem-card red fade-up">
+        <div class="problem-num">76%</div>
+        <h3>Auto-renewals catch people off guard</h3>
+        <p>Most subscription traps are buried on page 8. By the time you find out, you've already been charged.</p>
+      </div>
+      <div class="problem-card amber fade-up">
+        <div class="problem-num">68%</div>
+        <h3>Apps share your data without clear consent</h3>
+        <p>That "we may share with partners" clause usually means your data is being sold. You agreed to it without knowing.</p>
+      </div>
+      <div class="problem-card green fade-up">
+        <div class="problem-num">$0</div>
+        <h3>What most people spend on legal protection</h3>
+        <p>Lawyers are expensive. Most people have no one in their corner when they sign. Until now.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="section-inner">
+    <div class="section-tag">How it works</div>
+    <h2>Three steps to<br><em>knowing</em> what you sign</h2>
+    <p class="section-sub">No legal degree required. No hours of reading. Just clarity, in seconds.</p>
+    <div class="steps">
+      <div class="step-item fade-up">
+        <div class="step-num-wrap"><div class="step-num-inner">1</div></div>
+        <h3>Paste or upload</h3>
+        <p>Copy any terms & conditions, privacy policy, employment contract, or legal agreement into Tandem.</p>
+      </div>
+      <div class="step-item fade-up">
+        <div class="step-num-wrap"><div class="step-num-inner">2</div></div>
+        <h3>Tandem decodes it</h3>
+        <p>Our AI reads the entire document, identifies key clauses, flags risks, and scores the agreement for fairness.</p>
+      </div>
+      <div class="step-item fade-up">
+        <div class="step-num-wrap"><div class="step-num-inner">3</div></div>
+        <h3>You decide with confidence</h3>
+        <p>Get a plain-English summary, ask follow-up questions, and make your decision knowing exactly what you're agreeing to.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features" style="background: var(--surface-alt);">
+  <div class="section-inner">
+    <div class="section-tag">Features</div>
+    <h2>Everything you need<br>to <em>protect yourself</em></h2>
+    <p class="section-sub">Tandem is your personal legal companion — working alongside you on every document you encounter.</p>
+    <div class="features-grid">
+      <div class="feature-card fade-up">
+        <div class="feature-icon">📋</div>
+        <h3>Plain language summary</h3>
+        <p>Get the key points of any document in plain, everyday English. What it means for you — not what it says in legalese.</p>
+      </div>
+      <div class="feature-card fade-up">
+        <div class="feature-icon">🚩</div>
+        <h3>Red flag detector</h3>
+        <p>Tandem automatically surfaces the clauses that matter most — auto-renewals, data sharing, arbitration waivers, and more.</p>
+      </div>
+      <div class="feature-card fade-up">
+        <div class="feature-icon">⚖️</div>
+        <h3>Fairness score</h3>
+        <p>Every document gets scored out of 10 for how consumer-friendly it is — so you know at a glance where you stand.</p>
+      </div>
+      <div class="feature-card fade-up">
+        <div class="feature-icon">💬</div>
+        <h3>Ask anything</h3>
+        <p>"Can they share my data?" "What happens if I cancel?" Ask any question about the document and get a direct answer instantly.</p>
+      </div>
+      <div class="feature-card fade-up">
+        <div class="feature-icon">🗂️</div>
+        <h3>Your agreement vault</h3>
+        <p>Every document you decode is saved and searchable. Go back anytime to review what you agreed to — and when.</p>
+      </div>
+      <div class="feature-card fade-up">
+        <div class="feature-icon">🔔</div>
+        <h3>Change alerts</h3>
+        <p>Get notified when a company updates its terms. Know exactly what changed, in plain English, before it affects you.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-section" id="pricing">
+  <div class="section-inner">
+    <div class="section-tag">Pricing</div>
+    <h2>Simple, honest<br><em>pricing</em></h2>
+    <p class="section-sub">No hidden fees. No confusing tiers. Exactly what you'd expect from a company built around transparency.</p>
+    <div class="pricing-grid">
+      <div class="pricing-card fade-up">
+        <div class="plan-name">Free</div>
+        <div class="plan-price">$0</div>
+        <div class="plan-desc">Try it. See if it changes how you sign things.</div>
+        <ul class="plan-features">
+          <li>3 document scans per month</li>
+          <li>Plain language summary</li>
+          <li>Red flag detection</li>
+          <li class="muted">Ask anything</li>
+          <li class="muted">Agreement vault</li>
+          <li class="muted">Change alerts</li>
+        </ul>
+        <button class="plan-btn" onclick="document.getElementById('waitlist').scrollIntoView({behavior:'smooth'})">Get started free</button>
+      </div>
+      <div class="pricing-card featured fade-up">
+        <div class="popular-badge">Most popular</div>
+        <div class="plan-name">Basic</div>
+        <div class="plan-price">$9<span>/mo</span></div>
+        <div class="plan-desc">For anyone who signs more than a few things a month.</div>
+        <ul class="plan-features">
+          <li>20 document scans per month</li>
+          <li>Plain language summary</li>
+          <li>Red flag detection</li>
+          <li>Ask anything</li>
+          <li>Agreement vault</li>
+          <li class="muted">Change alerts</li>
+        </ul>
+        <button class="plan-btn featured-btn" onclick="document.getElementById('waitlist').scrollIntoView({behavior:'smooth'})">Join waitlist</button>
+      </div>
+      <div class="pricing-card fade-up">
+        <div class="plan-name">Pro</div>
+        <div class="plan-price">$19<span>/mo</span></div>
+        <div class="plan-desc">Unlimited access. For the seriously protected.</div>
+        <ul class="plan-features">
+          <li>Unlimited document scans</li>
+          <li>Plain language summary</li>
+          <li>Red flag detection</li>
+          <li>Ask anything</li>
+          <li>Agreement vault</li>
+          <li>Change alerts</li>
+        </ul>
+        <button class="plan-btn" onclick="document.getElementById('waitlist').scrollIntoView({behavior:'smooth'})">Join waitlist</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WAITLIST -->
+<section class="waitlist-section" id="waitlist">
+  <div class="waitlist-bg"></div>
+  <div class="section-inner">
+    <div class="waitlist-inner">
+      <div class="section-tag" style="text-align:center;">Early access</div>
+      <h2>Be the first to<br><em>know more</em></h2>
+      <p class="section-sub">Tandem is launching soon. Join the waitlist and get early access, founding member pricing, and a say in what we build next.</p>
+      <div class="waitlist-form" id="waitlistForm">
+        <input class="waitlist-input" id="emailInput" type="email" placeholder="your@email.com" />
+        <button class="btn-primary" onclick="joinWaitlist()">Join waitlist</button>
+      </div>
+      <div class="success-msg" id="successMsg">
+        ✓ You're on the list. We'll be in touch soon.
+      </div>
+      <p class="waitlist-note">No spam. Unsubscribe anytime. We hate hidden clauses too.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Tandem<span>.</span></div>
+  <div class="footer-text">© 2026 Tandem Inc. — Know what you're signing.</div>
+</footer>
+
+<script>
+function joinWaitlist() {
+  const email = document.getElementById('emailInput').value.trim();
+  if (!email || !email.includes('@')) {
+    document.getElementById('emailInput').style.borderColor = 'var(--danger)';
+    return;
+  }
+  document.getElementById('waitlistForm').style.display = 'none';
+  document.getElementById('successMsg').style.display = 'block';
+}
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth' });
+  });
+});
+</script>
+</body>
+</html>

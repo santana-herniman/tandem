@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Terms Decoder</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #0f0f0f;
+    --ink-muted: #5a5a5a;
+    --ink-faint: #9a9a9a;
+    --surface: #fafaf7;
+    --surface-alt: #f2f2ed;
+    --border: #e2e2dc;
+    --accent: #1a3a2a;
+    --accent-light: #e8f0eb;
+    --accent-mid: #2d6b47;
+    --danger: #c0392b;
+    --danger-light: #fdf0ef;
+    --warn: #b7770d;
+    --warn-light: #fef9ee;
+    --safe: #1a6b3a;
+    --safe-light: #edf7f1;
+    --radius: 12px;
+    --radius-sm: 6px;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--surface);
+    color: var(--ink);
+    min-height: 100vh;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  header {
+    padding: 28px 40px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: #fff;
+  }
+
+  .logo-mark {
+    width: 36px;
+    height: 36px;
+    background: var(--accent);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .logo-mark svg { width: 20px; height: 20px; }
+
+  .logo-text {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+  }
+
+  .logo-tag {
+    font-size: 12px;
+    color: var(--ink-faint);
+    font-weight: 300;
+    margin-left: 4px;
+  }
+
+  .main {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  .hero {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 36px;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    color: var(--accent-mid);
+  }
+
+  .hero p {
+    font-size: 15px;
+    color: var(--ink-muted);
+    max-width: 480px;
+    margin: 0 auto;
+    font-weight: 300;
+  }
+
+  .input-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+
+  .input-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 16px;
+    background: var(--surface-alt);
+    padding: 4px;
+    border-radius: var(--radius-sm);
+    width: fit-content;
+  }
+
+  .tab {
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink-muted);
+    border: none;
+    background: transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .tab.active {
+    background: #fff;
+    color: var(--ink);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  }
+
+  textarea {
+    width: 100%;
+    min-height: 180px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--ink);
+    background: var(--surface);
+    resize: vertical;
+    line-height: 1.6;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  textarea:focus { border-color: var(--accent-mid); }
+  textarea::placeholder { color: var(--ink-faint); }
+
+  .url-row {
+    display: flex;
+    gap: 10px;
+  }
+
+  .url-input {
+    flex: 1;
+    height: 42px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--ink);
+    background: var(--surface);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .url-input:focus { border-color: var(--accent-mid); }
+  .url-input::placeholder { color: var(--ink-faint); }
+
+  .examples {
+    margin-top: 12px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .example-pill {
+    font-size: 12px;
+    padding: 4px 12px;
+    border: 1px solid var(--border);
+    border-radius: 99px;
+    background: #fff;
+    color: var(--ink-muted);
+    cursor: pointer;
+    transition: all 0.15s;
+    font-weight: 400;
+  }
+
+  .example-pill:hover {
+    border-color: var(--accent-mid);
+    color: var(--accent-mid);
+  }
+
+  .decode-btn {
+    width: 100%;
+    height: 48px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    letter-spacing: 0.01em;
+  }
+
+  .decode-btn:hover { background: #162e22; }
+  .decode-btn:disabled { background: var(--ink-faint); cursor: not-allowed; }
+
+  .spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .results { display: none; }
+  .results.visible { display: block; animation: fadeUp 0.4s ease; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .result-section {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px 24px;
+    margin-bottom: 14px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 17px;
+    color: var(--ink);
+  }
+
+  .section-sub {
+    font-size: 12px;
+    color: var(--ink-faint);
+    margin-top: 1px;
+  }
+
+  .summary-text {
+    font-size: 14px;
+    color: var(--ink-muted);
+    line-height: 1.75;
+  }
+
+  .verdict-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 8px;
+    font-size: 13.5px;
+    line-height: 1.5;
+  }
+
+  .verdict-row.danger { background: var(--danger-light); color: var(--danger); }
+  .verdict-row.warn { background: var(--warn-light); color: var(--warn); }
+  .verdict-row.safe { background: var(--safe-light); color: var(--safe); }
+
+  .verdict-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .danger .verdict-dot { background: var(--danger); }
+  .warn .verdict-dot { background: var(--warn); }
+  .safe .verdict-dot { background: var(--safe); }
+
+  .score-bar-wrap {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 4px;
+  }
+
+  .score-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 40px;
+    color: var(--ink);
+    line-height: 1;
+  }
+
+  .score-label { font-size: 13px; color: var(--ink-muted); margin-top: 2px; }
+
+  .bar-wrap { flex: 1; }
+
+  .bar-track {
+    height: 8px;
+    background: var(--surface-alt);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%;
+    border-radius: 99px;
+    transition: width 0.8s ease;
+  }
+
+  .ask-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  .ask-input {
+    flex: 1;
+    height: 40px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: var(--ink);
+    background: var(--surface);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .ask-input:focus { border-color: var(--accent-mid); }
+  .ask-input::placeholder { color: var(--ink-faint); }
+
+  .ask-btn {
+    height: 40px;
+    padding: 0 16px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s;
+  }
+
+  .ask-btn:hover { background: #162e22; }
+  .ask-btn:disabled { background: var(--ink-faint); cursor: not-allowed; }
+
+  .qa-thread { margin-top: 12px; }
+
+  .qa-item {
+    margin-bottom: 12px;
+    animation: fadeUp 0.3s ease;
+  }
+
+  .qa-q {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+
+  .qa-a {
+    font-size: 13px;
+    color: var(--ink-muted);
+    line-height: 1.65;
+    padding: 10px 14px;
+    background: var(--accent-light);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--accent-mid);
+  }
+
+  .reset-btn {
+    margin-top: 20px;
+    font-size: 13px;
+    color: var(--ink-faint);
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 8px 16px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.15s;
+  }
+
+  .reset-btn:hover { color: var(--ink); border-color: var(--ink-muted); }
+
+  .status-bar {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    background: var(--accent-light);
+    border-radius: var(--radius-sm);
+    margin-bottom: 16px;
+    font-size: 13px;
+    color: var(--accent);
+  }
+
+  .status-bar.visible { display: flex; }
+
+  .tiny-spinner {
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(26,58,42,0.2);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    flex-shrink: 0;
+  }
+
+  .document-name {
+    font-size: 12px;
+    color: var(--ink-faint);
+    margin-bottom: 14px;
+    padding: 6px 12px;
+    background: var(--surface-alt);
+    border-radius: var(--radius-sm);
+    display: inline-block;
+  }
+
+  @media (max-width: 600px) {
+    header { padding: 20px; }
+    .main { padding: 24px 16px 60px; }
+    .hero h1 { font-size: 28px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-mark">
+    <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M4 5h12M4 8h8M4 11h10M4 14h6" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+      <circle cx="15.5" cy="13.5" r="3.5" fill="white" opacity="0.9"/>
+      <path d="M14.5 13.5h2M15.5 12.5v2" stroke="#1a3a2a" stroke-width="1.2" stroke-linecap="round"/>
+    </svg>
+  </div>
+  <div>
+    <span class="logo-text">Terms Decoder</span>
+    <span class="logo-tag">— know what you're signing</span>
+  </div>
+</header>
+
+<div class="main">
+
+  <div class="hero">
+    <h1>Stop signing things<br>you don't <em>understand</em></h1>
+    <p>Paste any terms & conditions. Get a plain-language breakdown, red flags, and answers to your questions — in seconds.</p>
+  </div>
+
+  <div id="inputSection">
+    <div class="input-card">
+      <div class="tabs">
+        <button class="tab active" onclick="switchTab('paste')">Paste text</button>
+        <button class="tab" onclick="switchTab('url')">From URL</button>
+      </div>
+
+      <div id="pasteTab">
+        <textarea id="tcText" placeholder="Paste the terms and conditions, privacy policy, or any legal agreement here..."></textarea>
+        <div class="examples">
+          <span style="font-size:12px; color:var(--ink-faint); align-self:center;">Try an example:</span>
+          <button class="example-pill" onclick="loadExample('netflix')">Netflix T&Cs</button>
+          <button class="example-pill" onclick="loadExample('employment')">Employment contract</button>
+          <button class="example-pill" onclick="loadExample('bnpl')">Buy now pay later</button>
+        </div>
+      </div>
+
+      <div id="urlTab" style="display:none;">
+        <div class="url-row">
+          <input class="url-input" id="urlInput" placeholder="https://example.com/terms" />
+          <button class="decode-btn" style="width:auto; padding:0 20px;" onclick="useUrl()">Fetch</button>
+        </div>
+        <p style="font-size:12px; color:var(--ink-faint); margin-top:8px;">Paste the URL of any terms page and we'll extract the text for you.</p>
+      </div>
+    </div>
+
+    <button class="decode-btn" id="decodeBtn" onclick="decode()">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 2L11 7H16L12 10.5L13.5 16L9 12.5L4.5 16L6 10.5L2 7H7L9 2Z" fill="white" opacity="0.9"/></svg>
+      Decode these terms
+    </button>
+  </div>
+
+  <div class="status-bar" id="statusBar">
+    <div class="tiny-spinner"></div>
+    <span id="statusText">Reading document...</span>
+  </div>
+
+  <div class="results" id="results">
+
+    <div class="result-section">
+      <div class="section-header">
+        <div class="section-icon" style="background:#edf7f1;">📋</div>
+        <div>
+          <div class="section-title">Plain language summary</div>
+          <div class="section-sub">What this document actually says</div>
+        </div>
+      </div>
+      <div id="docName"></div>
+      <div class="summary-text" id="summaryText"></div>
+    </div>
+
+    <div class="result-section">
+      <div class="section-header">
+        <div class="section-icon" style="background:#fdf0ef;">🚩</div>
+        <div>
+          <div class="section-title">Things you should know</div>
+          <div class="section-sub">Flagged clauses ranked by impact</div>
+        </div>
+      </div>
+      <div id="flagsList"></div>
+    </div>
+
+    <div class="result-section">
+      <div class="section-header">
+        <div class="section-icon" style="background:#fef9ee;">⚖️</div>
+        <div>
+          <div class="section-title">Fairness score</div>
+          <div class="section-sub">How consumer-friendly is this agreement?</div>
+        </div>
+      </div>
+      <div class="score-bar-wrap">
+        <div>
+          <div class="score-num" id="scoreNum">—</div>
+          <div class="score-label" id="scoreLabel">out of 10</div>
+        </div>
+        <div class="bar-wrap">
+          <div class="bar-track">
+            <div class="bar-fill" id="barFill" style="width:0%;"></div>
+          </div>
+          <div style="font-size:12px; color:var(--ink-faint); margin-top:6px;" id="scoreVerdict"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="result-section">
+      <div class="section-header">
+        <div class="section-icon" style="background:#e8f0eb;">💬</div>
+        <div>
+          <div class="section-title">Ask anything</div>
+          <div class="section-sub">Get specific answers about this document</div>
+        </div>
+      </div>
+      <div class="ask-row">
+        <input class="ask-input" id="askInput" placeholder="e.g. Can they share my data with third parties?" onkeydown="if(event.key==='Enter') askQuestion()" />
+        <button class="ask-btn" id="askBtn" onclick="askQuestion()">Ask</button>
+      </div>
+      <div class="qa-thread" id="qaThread"></div>
+    </div>
+
+    <button class="reset-btn" onclick="reset()">← Decode another document</button>
+
+  </div>
+
+</div>
+
+<script>
+const EXAMPLES = {
+  netflix: `Netflix Terms of Use (excerpt)
+
+1. Netflix membership
+Your Netflix membership is a contract between you and Netflix. By becoming a member, you agree to these Terms of Use. The Netflix service and any content accessed through our service are for your personal and non-commercial use only and may not be shared with individuals beyond your household.
+
+2. Billing and cancellation
+We will continue to bill your Payment Method on a month-to-month basis until you cancel. You must cancel before your next billing date to avoid charges. We will send you an email confirmation when you cancel, but Netflix does not provide refunds or credits for any partial-month membership periods or unwatched content.
+
+3. Netflix passwords
+The Netflix account owner (the person whose payment method is charged) has access and control over the Netflix account. To maintain control over the account and prevent anyone from accessing the account, the account owner should maintain control over the Netflix-ready devices and should not reveal the password or payment method details to anyone. You are responsible for updating and maintaining the accuracy of the information you provide to us.
+
+4. Disclaimers of warranties and limitations on liability
+The Netflix service is provided "as is" and without warranty or condition. Netflix does not guarantee, represent, or warrant that your use of the service will be uninterrupted or error-free. Netflix shall not be liable for any direct, indirect, incidental, special, consequential or punitive damages.
+
+5. Arbitration agreement
+You and Netflix agree that any dispute, claim or controversy arising out of or relating to these Terms of Use or the breach, termination, enforcement, interpretation or validity thereof or the use of the Service will be resolved by binding arbitration. YOU ARE GIVING UP THE RIGHT TO LITIGATE (OR PARTICIPATE IN AS A PARTY OR CLASS MEMBER) ALL DISPUTES IN COURT BEFORE A JUDGE OR JURY.`,
+
+  employment: `Employment Agreement (excerpt)
+
+1. At-will employment
+Your employment with the Company is at-will, meaning either you or the Company may terminate the employment relationship at any time, with or without cause, and with or without advance notice.
+
+2. Intellectual property
+You agree that any work product, invention, discovery, development, improvement, innovation, design, idea or suggestion that you make, conceive, reduce to practice or develop, in whole or in part, during your employment, whether or not during working hours, relating to the business of the Company, shall be the exclusive property of the Company.
+
+3. Non-compete
+For a period of 12 months following your termination, you shall not, directly or indirectly, engage in any business that competes with the Company within a 50-mile radius or online in any market in which the Company operates.
+
+4. Confidentiality
+You shall not disclose any confidential information of the Company to any third party at any time during or after your employment. Confidential information includes all business information, trade secrets, customer lists, and pricing.
+
+5. Salary and benefits
+The Company will pay you a base salary of [amount] per year, payable in accordance with the Company's standard payroll schedule. The Company reserves the right to modify compensation, benefits, and other terms of employment at its discretion.`,
+
+  bnpl: `Buy Now Pay Later Agreement (excerpt)
+
+1. Payment schedule
+You agree to repay the full purchase amount in 4 equal fortnightly instalments. The first instalment is due at the time of purchase. If you miss a payment, a late fee of $10 will be applied to your account.
+
+2. Credit reporting
+We reserve the right to report missed payments to credit reporting agencies. Multiple missed payments may negatively impact your credit score and your ability to use our service in the future.
+
+3. Collection and debt recovery
+If your account remains unpaid after 60 days, we may refer your debt to a third-party debt collection agency. You will be responsible for any collection costs incurred, which may increase the total amount you owe.
+
+4. Data sharing
+We may share your personal information including purchase history and payment behaviour with our affiliated partners, marketing partners, and financial institutions for credit assessment and marketing purposes.
+
+5. Merchant disputes
+If you have a dispute with the merchant regarding the product or service purchased, you must resolve this directly with the merchant. We are not responsible for the quality, delivery, or non-delivery of goods and services.
+
+6. Changes to terms
+We reserve the right to change these terms at any time. We will notify you by email, and your continued use of the service constitutes acceptance of the new terms.`
+};
+
+let currentDoc = '';
+let currentTab = 'paste';
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('pasteTab').style.display = tab === 'paste' ? 'block' : 'none';
+  document.getElementById('urlTab').style.display = tab === 'url' ? 'block' : 'none';
+}
+
+function loadExample(key) {
+  document.getElementById('tcText').value = EXAMPLES[key];
+  document.getElementById('tcText').focus();
+}
+
+function useUrl() {
+  const url = document.getElementById('urlInput').value.trim();
+  if (!url) return;
+  document.getElementById('tcText').value = '';
+  switchTab('paste');
+  document.querySelectorAll('.tab')[0].classList.add('active');
+  document.querySelectorAll('.tab')[1].classList.remove('active');
+  document.getElementById('pasteTab').style.display = 'block';
+  document.getElementById('urlTab').style.display = 'none';
+  document.getElementById('tcText').value = `[Content from: ${url}]\n\nNote: In the full version, this would automatically fetch and extract the terms from the URL. For this prototype, please paste the text directly.`;
+}
+
+function setStatus(text) {
+  const bar = document.getElementById('statusBar');
+  bar.classList.add('visible');
+  document.getElementById('statusText').textContent = text;
+}
+
+function hideStatus() {
+  document.getElementById('statusBar').classList.remove('visible');
+}
+
+async function callClaude(systemPrompt, userMessage) {
+  const response = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 1000,
+      system: systemPrompt,
+      messages: [{ role: 'user', content: userMessage }]
+    })
+  });
+  const data = await response.json();
+  return data.content[0].text;
+}
+
+async function decode() {
+  const text = document.getElementById('tcText').value.trim();
+  if (!text || text.length < 50) {
+    alert('Please paste some terms and conditions text first.');
+    return;
+  }
+
+  currentDoc = text;
+
+  const btn = document.getElementById('decodeBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner"></div> Decoding...';
+
+  try {
+    setStatus('Reading and understanding your document...');
+
+    const systemPrompt = `You are Terms Decoder, an AI that helps everyday people understand legal documents. You must respond ONLY with valid JSON. No preamble, no explanation, no markdown backticks. Pure JSON only.`;
+
+    const userMessage = `Analyse this legal document and return ONLY a JSON object with exactly this structure:
+{
+  "docName": "short name/type of this document (e.g. Netflix Terms of Service)",
+  "summary": "3-4 sentence plain English summary of what this document is and what it means for the person signing it",
+  "flags": [
+    {
+      "level": "danger|warn|safe",
+      "text": "plain English description of this clause and why it matters"
+    }
+  ],
+  "score": 6,
+  "scoreVerdict": "one sentence verdict on how fair this agreement is"
+}
+
+Rules:
+- flags array must have 4-6 items, mix of danger/warn/safe
+- danger = seriously disadvantages the consumer
+- warn = worth knowing but not critical
+- safe = a genuinely fair or consumer-friendly clause
+- score is 1-10 (1=very unfair, 10=very fair to consumer)
+- All text must be in plain everyday English, no legal jargon
+
+Document to analyse:
+${text.substring(0, 4000)}`;
+
+    const raw = await callClaude(systemPrompt, userMessage);
+
+    let result;
+    try {
+      result = JSON.parse(raw.replace(/```json|```/g, '').trim());
+    } catch(e) {
+      throw new Error('Could not parse response');
+    }
+
+    hideStatus();
+    renderResults(result);
+
+  } catch(err) {
+    hideStatus();
+    alert('Something went wrong decoding this document. Please try again.');
+    console.error(err);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 2L11 7H16L12 10.5L13.5 16L9 12.5L4.5 16L6 10.5L2 7H7L9 2Z" fill="white" opacity="0.9"/></svg> Decode these terms';
+  }
+}
+
+function renderResults(data) {
+  if (data.docName) {
+    document.getElementById('docName').innerHTML = `<div class="document-name">📄 ${data.docName}</div>`;
+  }
+
+  document.getElementById('summaryText').textContent = data.summary || '';
+
+  const flagsEl = document.getElementById('flagsList');
+  flagsEl.innerHTML = '';
+  (data.flags || []).forEach(f => {
+    const div = document.createElement('div');
+    div.className = `verdict-row ${f.level}`;
+    div.innerHTML = `<div class="verdict-dot"></div><span>${f.text}</span>`;
+    flagsEl.appendChild(div);
+  });
+
+  const score = Math.min(10, Math.max(1, Math.round(data.score || 5)));
+  document.getElementById('scoreNum').textContent = score;
+  document.getElementById('scoreVerdict').textContent = data.scoreVerdict || '';
+
+  const fill = document.getElementById('barFill');
+  const pct = (score / 10) * 100;
+  fill.style.width = '0%';
+  let color = score >= 7 ? 'var(--safe)' : score >= 4 ? 'var(--warn)' : 'var(--danger)';
+  fill.style.background = color;
+  setTimeout(() => { fill.style.width = pct + '%'; }, 100);
+
+  document.getElementById('inputSection').style.display = 'none';
+  document.getElementById('results').classList.add('visible');
+}
+
+async function askQuestion() {
+  const input = document.getElementById('askInput');
+  const question = input.value.trim();
+  if (!question) return;
+
+  const btn = document.getElementById('askBtn');
+  btn.disabled = true;
+  btn.textContent = '...';
+  input.value = '';
+
+  const thread = document.getElementById('qaThread');
+
+  const qDiv = document.createElement('div');
+  qDiv.className = 'qa-item';
+  qDiv.innerHTML = `<div class="qa-q">Q: ${question}</div><div class="qa-a" style="color:var(--ink-faint); font-style:italic;">Thinking...</div>`;
+  thread.appendChild(qDiv);
+
+  try {
+    const systemPrompt = `You are Terms Decoder. Answer questions about legal documents in plain, friendly English. Be direct and specific. Keep answers to 2-3 sentences maximum. No legal jargon.`;
+
+    const answer = await callClaude(systemPrompt, `Based on this document:\n\n${currentDoc.substring(0, 3000)}\n\nAnswer this question in plain English: ${question}`);
+
+    qDiv.querySelector('.qa-a').style.color = '';
+    qDiv.querySelector('.qa-a').style.fontStyle = '';
+    qDiv.querySelector('.qa-a').textContent = answer;
+
+  } catch(err) {
+    qDiv.querySelector('.qa-a').textContent = 'Sorry, could not get an answer. Please try again.';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Ask';
+  }
+}
+
+function reset() {
+  document.getElementById('tcText').value = '';
+  document.getElementById('results').classList.remove('visible');
+  document.getElementById('inputSection').style.display = 'block';
+  document.getElementById('qaThread').innerHTML = '';
+  document.getElementById('flagsList').innerHTML = '';
+  currentDoc = '';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
