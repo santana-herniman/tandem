@@ -3,710 +3,972 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Terms Decoder</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<title>Tandem — Decoder</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Epilogue:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  :root {
-    --ink: #0f0f0f;
-    --ink-muted: #5a5a5a;
-    --ink-faint: #9a9a9a;
-    --surface: #fafaf7;
-    --surface-alt: #f2f2ed;
-    --border: #e2e2dc;
-    --accent: #1a3a2a;
-    --accent-light: #e8f0eb;
-    --accent-mid: #2d6b47;
-    --danger: #c0392b;
-    --danger-light: #fdf0ef;
-    --warn: #b7770d;
-    --warn-light: #fef9ee;
-    --safe: #1a6b3a;
-    --safe-light: #edf7f1;
-    --radius: 12px;
-    --radius-sm: 6px;
-  }
+:root {
+  --ink: #0a0e1a;
+  --cream: #f5f0e8;
+  --cream-dim: #c8bfa8;
+  --cream-faint: #7a7060;
+  --accent: #e8c547;
+  --surface: #111520;
+  --surface-alt: #181d2e;
+  --border: rgba(245,240,232,0.1);
+  --border-strong: rgba(245,240,232,0.2);
+  --danger: #e85c4a;
+  --danger-bg: rgba(232,92,74,0.1);
+  --warn: #e8a234;
+  --warn-bg: rgba(232,162,52,0.1);
+  --safe: #4aaa6e;
+  --safe-bg: rgba(74,170,110,0.1);
+  --radius: 8px;
+}
 
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--surface);
-    color: var(--ink);
-    min-height: 100vh;
-    font-size: 15px;
-    line-height: 1.6;
-  }
+html { scroll-behavior: smooth; }
 
-  header {
-    padding: 28px 40px 24px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    background: #fff;
-  }
+body {
+  font-family: 'Epilogue', sans-serif;
+  background: var(--ink);
+  color: var(--cream);
+  font-size: 15px;
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
 
-  .logo-mark {
-    width: 36px;
-    height: 36px;
-    background: var(--accent);
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
+/* NAV — identical to landing page */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 20px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(10,14,26,0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
 
-  .logo-mark svg { width: 20px; height: 20px; }
+.nav-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--cream);
+  letter-spacing: -0.02em;
+  text-decoration: none;
+}
 
-  .logo-text {
-    font-family: 'DM Serif Display', serif;
-    font-size: 20px;
-    color: var(--ink);
-    letter-spacing: -0.02em;
-  }
+.nav-logo span { color: var(--accent); }
 
-  .logo-tag {
-    font-size: 12px;
-    color: var(--ink-faint);
-    font-weight: 300;
-    margin-left: 4px;
-  }
+.nav-links { display: flex; align-items: center; gap: 32px; }
+.nav-links a {
+  font-size: 14px;
+  color: var(--cream-dim);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--cream); }
 
-  .main {
-    max-width: 780px;
-    margin: 0 auto;
-    padding: 40px 24px 80px;
-  }
+.nav-cta {
+  background: var(--accent) !important;
+  color: var(--ink) !important;
+  padding: 10px 22px;
+  border-radius: 4px;
+  font-weight: 500 !important;
+  font-size: 14px !important;
+}
 
-  .hero {
-    text-align: center;
-    margin-bottom: 40px;
-  }
+/* APP LAYOUT */
+.app-wrap {
+  padding-top: 72px;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 400px 1fr;
+}
 
-  .hero h1 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 36px;
-    line-height: 1.15;
-    letter-spacing: -0.02em;
-    color: var(--ink);
-    margin-bottom: 12px;
-  }
+/* LEFT PANEL */
+.left-panel {
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 72px);
+  position: sticky;
+  top: 72px;
+  overflow-y: auto;
+}
 
-  .hero h1 em {
-    font-style: italic;
-    color: var(--accent-mid);
-  }
+.panel-header {
+  padding: 28px 28px 20px;
+  border-bottom: 1px solid var(--border);
+}
 
-  .hero p {
-    font-size: 15px;
-    color: var(--ink-muted);
-    max-width: 480px;
-    margin: 0 auto;
-    font-weight: 300;
-  }
+.panel-eyebrow {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 8px;
+}
 
-  .input-card {
-    background: #fff;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 24px;
-    margin-bottom: 16px;
-  }
+.panel-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--cream);
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
+}
 
-  .input-label {
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--ink-faint);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    margin-bottom: 10px;
-    display: block;
-  }
+.panel-sub {
+  font-size: 13px;
+  color: var(--cream-faint);
+  font-weight: 300;
+  line-height: 1.55;
+}
 
-  .tabs {
-    display: flex;
-    gap: 4px;
-    margin-bottom: 16px;
-    background: var(--surface-alt);
-    padding: 4px;
-    border-radius: var(--radius-sm);
-    width: fit-content;
-  }
+.panel-body {
+  padding: 20px 28px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
 
-  .tab {
-    padding: 6px 14px;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--ink-muted);
-    border: none;
-    background: transparent;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.15s;
-  }
+/* TABS */
+.tabs {
+  display: flex;
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 4px;
+  gap: 4px;
+}
 
-  .tab.active {
-    background: #fff;
-    color: var(--ink);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-  }
+.tab {
+  flex: 1;
+  padding: 8px;
+  font-size: 13px;
+  font-family: 'Epilogue', sans-serif;
+  color: var(--cream-faint);
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
 
-  textarea {
-    width: 100%;
-    min-height: 180px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 14px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    color: var(--ink);
-    background: var(--surface);
-    resize: vertical;
-    line-height: 1.6;
-    outline: none;
-    transition: border-color 0.15s;
-  }
+.tab.active {
+  background: rgba(245,240,232,0.08);
+  color: var(--cream);
+}
 
-  textarea:focus { border-color: var(--accent-mid); }
-  textarea::placeholder { color: var(--ink-faint); }
+.input-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--cream-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+  display: block;
+}
 
-  .url-row {
-    display: flex;
-    gap: 10px;
-  }
+textarea {
+  width: 100%;
+  min-height: 200px;
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  font-family: 'Epilogue', sans-serif;
+  font-size: 13px;
+  color: var(--cream);
+  resize: vertical;
+  line-height: 1.65;
+  outline: none;
+  transition: border-color 0.15s;
+}
 
-  .url-input {
-    flex: 1;
-    height: 42px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 0 14px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    color: var(--ink);
-    background: var(--surface);
-    outline: none;
-    transition: border-color 0.15s;
-  }
+textarea:focus { border-color: rgba(232,197,71,0.4); }
+textarea::placeholder { color: var(--cream-faint); }
 
-  .url-input:focus { border-color: var(--accent-mid); }
-  .url-input::placeholder { color: var(--ink-faint); }
+.url-row { display: flex; gap: 8px; }
 
-  .examples {
-    margin-top: 12px;
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
+.url-input {
+  flex: 1;
+  height: 40px;
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0 14px;
+  font-family: 'Epilogue', sans-serif;
+  font-size: 13px;
+  color: var(--cream);
+  outline: none;
+  transition: border-color 0.15s;
+}
 
-  .example-pill {
-    font-size: 12px;
-    padding: 4px 12px;
-    border: 1px solid var(--border);
-    border-radius: 99px;
-    background: #fff;
-    color: var(--ink-muted);
-    cursor: pointer;
-    transition: all 0.15s;
-    font-weight: 400;
-  }
+.url-input:focus { border-color: rgba(232,197,71,0.4); }
+.url-input::placeholder { color: var(--cream-faint); }
 
-  .example-pill:hover {
-    border-color: var(--accent-mid);
-    color: var(--accent-mid);
-  }
+/* EXAMPLES */
+.examples-wrap { display: flex; flex-direction: column; gap: 6px; }
 
-  .decode-btn {
-    width: 100%;
-    height: 48px;
-    background: var(--accent);
-    color: #fff;
-    border: none;
-    border-radius: var(--radius-sm);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    letter-spacing: 0.01em;
-  }
+.example-pill {
+  width: 100%;
+  text-align: left;
+  padding: 10px 14px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-family: 'Epilogue', sans-serif;
+  font-size: 13px;
+  color: var(--cream-dim);
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 
-  .decode-btn:hover { background: #162e22; }
-  .decode-btn:disabled { background: var(--ink-faint); cursor: not-allowed; }
+.example-pill:hover {
+  border-color: rgba(232,197,71,0.3);
+  color: var(--cream);
+  background: rgba(232,197,71,0.04);
+}
 
-  .spinner {
-    width: 18px;
-    height: 18px;
-    border: 2px solid rgba(255,255,255,0.3);
-    border-top-color: #fff;
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-  }
+/* DECODE BUTTON — matches landing page btn-primary */
+.decode-btn {
+  width: 100%;
+  height: 48px;
+  background: var(--accent);
+  color: var(--ink);
+  border: none;
+  border-radius: 4px;
+  font-family: 'Epilogue', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s;
+  margin-top: auto;
+}
 
-  @keyframes spin { to { transform: rotate(360deg); } }
+.decode-btn:hover { background: #f0d060; transform: translateY(-1px); }
+.decode-btn:disabled { background: var(--surface-alt); color: var(--cream-faint); cursor: not-allowed; transform: none; border: 1px solid var(--border); }
 
-  .results { display: none; }
-  .results.visible { display: block; animation: fadeUp 0.4s ease; }
+.spinner {
+  width: 16px; height: 16px;
+  border: 2px solid rgba(10,14,26,0.3);
+  border-top-color: var(--ink);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
 
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+@keyframes spin { to { transform: rotate(360deg); } }
 
-  .result-section {
-    background: #fff;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 22px 24px;
-    margin-bottom: 14px;
-  }
+/* HISTORY */
+.history-section {
+  padding: 16px 28px 20px;
+  border-top: 1px solid var(--border);
+}
 
-  .section-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 16px;
-    padding-bottom: 14px;
-    border-bottom: 1px solid var(--border);
-  }
+.history-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--cream-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 10px;
+}
 
-  .section-icon {
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    flex-shrink: 0;
-  }
+.history-empty {
+  font-size: 12px;
+  color: var(--cream-faint);
+  font-style: italic;
+  font-weight: 300;
+}
 
-  .section-title {
-    font-family: 'DM Serif Display', serif;
-    font-size: 17px;
-    color: var(--ink);
-  }
+.history-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s;
+  margin-bottom: 3px;
+}
 
-  .section-sub {
-    font-size: 12px;
-    color: var(--ink-faint);
-    margin-top: 1px;
-  }
+.history-item:hover { background: var(--surface-alt); }
 
-  .summary-text {
-    font-size: 14px;
-    color: var(--ink-muted);
-    line-height: 1.75;
-  }
+.history-name {
+  font-size: 13px;
+  color: var(--cream-dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 220px;
+}
 
-  .verdict-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 14px;
-    border-radius: var(--radius-sm);
-    margin-bottom: 8px;
-    font-size: 13.5px;
-    line-height: 1.5;
-  }
+.history-score {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 99px;
+  flex-shrink: 0;
+}
 
-  .verdict-row.danger { background: var(--danger-light); color: var(--danger); }
-  .verdict-row.warn { background: var(--warn-light); color: var(--warn); }
-  .verdict-row.safe { background: var(--safe-light); color: var(--safe); }
+/* RIGHT PANEL */
+.right-panel {
+  background: var(--ink);
+  padding: 40px 48px;
+  min-height: calc(100vh - 72px);
+}
 
-  .verdict-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
+/* EMPTY STATE */
+.empty-state {
+  height: 100%;
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 16px;
+}
 
-  .danger .verdict-dot { background: var(--danger); }
-  .warn .verdict-dot { background: var(--warn); }
-  .safe .verdict-dot { background: var(--safe); }
+.empty-icon {
+  width: 72px;
+  height: 72px;
+  border: 1px solid var(--border-strong);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  margin-bottom: 8px;
+  background: var(--surface);
+}
 
-  .score-bar-wrap {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-top: 4px;
-  }
+.empty-state h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--cream);
+  letter-spacing: -0.02em;
+}
 
-  .score-num {
-    font-family: 'DM Serif Display', serif;
-    font-size: 40px;
-    color: var(--ink);
-    line-height: 1;
-  }
+.empty-state p {
+  font-size: 15px;
+  color: var(--cream-faint);
+  max-width: 360px;
+  font-weight: 300;
+  line-height: 1.7;
+}
 
-  .score-label { font-size: 13px; color: var(--ink-muted); margin-top: 2px; }
+.empty-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 8px;
+}
 
-  .bar-wrap { flex: 1; }
+.empty-tag {
+  font-size: 12px;
+  padding: 5px 14px;
+  border: 1px solid var(--border);
+  border-radius: 99px;
+  color: var(--cream-faint);
+}
 
-  .bar-track {
-    height: 8px;
-    background: var(--surface-alt);
-    border-radius: 99px;
-    overflow: hidden;
-  }
+/* LOADING */
+.loading-state {
+  display: none;
+  min-height: 60vh;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  text-align: center;
+}
 
-  .bar-fill {
-    height: 100%;
-    border-radius: 99px;
-    transition: width 0.8s ease;
-  }
+.loading-state.visible { display: flex; }
 
-  .ask-row {
-    display: flex;
-    gap: 10px;
-    margin-top: 16px;
-  }
+.loading-ring {
+  width: 52px; height: 52px;
+  border: 2px solid var(--border-strong);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
 
-  .ask-input {
-    flex: 1;
-    height: 40px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 0 12px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    color: var(--ink);
-    background: var(--surface);
-    outline: none;
-    transition: border-color 0.15s;
-  }
+.loading-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-style: italic;
+  color: var(--cream-dim);
+}
 
-  .ask-input:focus { border-color: var(--accent-mid); }
-  .ask-input::placeholder { color: var(--ink-faint); }
+.loading-sub { font-size: 13px; color: var(--cream-faint); font-weight: 300; }
 
-  .ask-btn {
-    height: 40px;
-    padding: 0 16px;
-    background: var(--accent);
-    color: #fff;
-    border: none;
-    border-radius: var(--radius-sm);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: background 0.15s;
-  }
+/* RESULTS */
+.results { display: none; animation: fadeUp 0.5s ease; }
+.results.visible { display: block; }
 
-  .ask-btn:hover { background: #162e22; }
-  .ask-btn:disabled { background: var(--ink-faint); cursor: not-allowed; }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
-  .qa-thread { margin-top: 12px; }
+/* DOC HEADER */
+.doc-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 28px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+}
 
-  .qa-item {
-    margin-bottom: 12px;
-    animation: fadeUp 0.3s ease;
-  }
+.doc-eyebrow {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 8px;
+}
 
-  .qa-q {
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--ink);
-    margin-bottom: 4px;
-  }
+.doc-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--cream);
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
 
-  .qa-a {
-    font-size: 13px;
-    color: var(--ink-muted);
-    line-height: 1.65;
-    padding: 10px 14px;
-    background: var(--accent-light);
-    border-radius: var(--radius-sm);
-    border-left: 3px solid var(--accent-mid);
-  }
+.score-circle {
+  flex-shrink: 0;
+  width: 76px; height: 76px;
+  border-radius: 50%;
+  border: 2px solid;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
 
-  .reset-btn {
-    margin-top: 20px;
-    font-size: 13px;
-    color: var(--ink-faint);
-    background: none;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 8px 16px;
-    cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
-    transition: all 0.15s;
-  }
+.score-circle .num {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1;
+}
 
-  .reset-btn:hover { color: var(--ink); border-color: var(--ink-muted); }
+.score-circle .denom {
+  font-size: 10px;
+  opacity: 0.6;
+  margin-top: 1px;
+}
 
-  .status-bar {
-    display: none;
-    align-items: center;
-    gap: 10px;
-    padding: 12px 16px;
-    background: var(--accent-light);
-    border-radius: var(--radius-sm);
-    margin-bottom: 16px;
-    font-size: 13px;
-    color: var(--accent);
-  }
+/* RESULT CARDS — matching landing page card style */
+.result-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 16px;
+  overflow: hidden;
+}
 
-  .status-bar.visible { display: flex; }
+.card-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
 
-  .tiny-spinner {
-    width: 14px;
-    height: 14px;
-    border: 2px solid rgba(26,58,42,0.2);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-    flex-shrink: 0;
-  }
+.card-icon {
+  width: 32px; height: 32px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
 
-  .document-name {
-    font-size: 12px;
-    color: var(--ink-faint);
-    margin-bottom: 14px;
-    padding: 6px 12px;
-    background: var(--surface-alt);
-    border-radius: var(--radius-sm);
-    display: inline-block;
-  }
+.card-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--cream);
+}
 
-  @media (max-width: 600px) {
-    header { padding: 20px; }
-    .main { padding: 24px 16px 60px; }
-    .hero h1 { font-size: 28px; }
-  }
+.card-sub {
+  font-size: 11px;
+  color: var(--cream-faint);
+  margin-top: 1px;
+}
+
+.card-body { padding: 18px 20px; }
+
+/* SUMMARY */
+.summary-text {
+  font-size: 14px;
+  color: var(--cream-dim);
+  line-height: 1.8;
+  font-weight: 300;
+}
+
+/* FLAGS */
+.flag-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  font-size: 13.5px;
+  line-height: 1.55;
+}
+
+.flag-item:last-child { margin-bottom: 0; }
+.flag-item.danger { background: var(--danger-bg); }
+.flag-item.warn { background: var(--warn-bg); }
+.flag-item.safe { background: var(--safe-bg); }
+
+.flag-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  padding-top: 2px;
+}
+
+.flag-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+}
+
+.danger .flag-dot { background: var(--danger); }
+.warn .flag-dot { background: var(--warn); }
+.safe .flag-dot { background: var(--safe); }
+
+.flag-level {
+  font-size: 9px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.danger .flag-level { color: var(--danger); }
+.warn .flag-level { color: var(--warn); }
+.safe .flag-level { color: var(--safe); }
+
+.flag-text { color: var(--cream-dim); }
+
+/* SCORE */
+.score-wrap {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.score-big {
+  font-family: 'Playfair Display', serif;
+  font-size: 52px;
+  font-weight: 700;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.score-right { flex: 1; }
+
+.score-track {
+  height: 6px;
+  background: rgba(245,240,232,0.08);
+  border-radius: 99px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.score-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 1s ease;
+  width: 0%;
+}
+
+.score-verdict {
+  font-size: 13px;
+  color: var(--cream-faint);
+  font-weight: 300;
+  line-height: 1.6;
+}
+
+/* ASK */
+.suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.suggestion {
+  font-size: 12px;
+  padding: 5px 12px;
+  border: 1px solid var(--border);
+  border-radius: 99px;
+  color: var(--cream-faint);
+  background: transparent;
+  cursor: pointer;
+  font-family: 'Epilogue', sans-serif;
+  transition: all 0.15s;
+}
+
+.suggestion:hover { border-color: rgba(232,197,71,0.3); color: var(--cream); }
+
+.ask-row { display: flex; gap: 8px; margin-bottom: 16px; }
+
+.ask-input {
+  flex: 1;
+  height: 44px;
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0 14px;
+  font-family: 'Epilogue', sans-serif;
+  font-size: 13px;
+  color: var(--cream);
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.ask-input:focus { border-color: rgba(232,197,71,0.4); }
+.ask-input::placeholder { color: var(--cream-faint); }
+
+.ask-btn {
+  height: 44px;
+  padding: 0 20px;
+  background: var(--accent);
+  color: var(--ink);
+  border: none;
+  border-radius: 4px;
+  font-family: 'Epilogue', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+
+.ask-btn:hover { background: #f0d060; }
+.ask-btn:disabled { background: var(--surface-alt); color: var(--cream-faint); cursor: not-allowed; }
+
+.qa-thread { display: flex; flex-direction: column; gap: 12px; }
+
+.qa-item { animation: fadeUp 0.3s ease; }
+
+.qa-q {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--cream);
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.qa-q::before {
+  content: 'Q';
+  width: 20px; height: 20px;
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: var(--cream-faint);
+  flex-shrink: 0;
+}
+
+.qa-a {
+  font-size: 13px;
+  color: var(--cream-dim);
+  line-height: 1.7;
+  padding: 12px 16px;
+  background: rgba(232,197,71,0.05);
+  border-left: 2px solid rgba(232,197,71,0.4);
+  border-radius: 0 6px 6px 0;
+  font-weight: 300;
+}
+
+.qa-loading { font-style: italic; color: var(--cream-faint); }
+
+/* RESET BTN */
+.reset-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--cream-faint);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 10px 18px;
+  cursor: pointer;
+  font-family: 'Epilogue', sans-serif;
+  transition: all 0.15s;
+}
+
+.reset-btn:hover { color: var(--cream); border-color: var(--border-strong); }
+
+/* RESPONSIVE */
+@media (max-width: 860px) {
+  nav { padding: 16px 20px; }
+  .nav-links { display: none; }
+  .app-wrap { grid-template-columns: 1fr; }
+  .left-panel { position: static; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
+  .right-panel { padding: 28px 20px; }
+  .doc-header { flex-direction: column; }
+}
 </style>
 </head>
 <body>
 
-<header>
-  <div class="logo-mark">
-    <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M4 5h12M4 8h8M4 11h10M4 14h6" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
-      <circle cx="15.5" cy="13.5" r="3.5" fill="white" opacity="0.9"/>
-      <path d="M14.5 13.5h2M15.5 12.5v2" stroke="#1a3a2a" stroke-width="1.2" stroke-linecap="round"/>
-    </svg>
+<!-- NAV — matches landing page exactly -->
+<nav>
+  <a href="/" class="nav-logo">Tandem<span>.</span></a>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/#pricing">Pricing</a>
+    <a href="/#waitlist" class="nav-cta">Join waitlist</a>
   </div>
-  <div>
-    <span class="logo-text">Terms Decoder</span>
-    <span class="logo-tag">— know what you're signing</span>
-  </div>
-</header>
+</nav>
 
-<div class="main">
+<div class="app-wrap">
 
-  <div class="hero">
-    <h1>Stop signing things<br>you don't <em>understand</em></h1>
-    <p>Paste any terms & conditions. Get a plain-language breakdown, red flags, and answers to your questions — in seconds.</p>
-  </div>
+  <!-- LEFT PANEL -->
+  <div class="left-panel">
+    <div class="panel-header">
+      <div class="panel-eyebrow">Terms Decoder</div>
+      <div class="panel-title">Know what you're signing</div>
+      <div class="panel-sub">Paste any legal document and Tandem decodes it in plain English — red flags, fairness score, and answers to your questions.</div>
+    </div>
 
-  <div id="inputSection">
-    <div class="input-card">
+    <div class="panel-body">
       <div class="tabs">
-        <button class="tab active" onclick="switchTab('paste')">Paste text</button>
-        <button class="tab" onclick="switchTab('url')">From URL</button>
+        <button class="tab active" onclick="switchTab('paste', this)">Paste text</button>
+        <button class="tab" onclick="switchTab('url', this)">From URL</button>
       </div>
 
       <div id="pasteTab">
-        <textarea id="tcText" placeholder="Paste the terms and conditions, privacy policy, or any legal agreement here..."></textarea>
-        <div class="examples">
-          <span style="font-size:12px; color:var(--ink-faint); align-self:center;">Try an example:</span>
-          <button class="example-pill" onclick="loadExample('netflix')">Netflix T&Cs</button>
-          <button class="example-pill" onclick="loadExample('employment')">Employment contract</button>
-          <button class="example-pill" onclick="loadExample('bnpl')">Buy now pay later</button>
-        </div>
+        <label class="input-label">Your document</label>
+        <textarea id="tcText" placeholder="Paste terms & conditions, privacy policy, employment contract, or any legal agreement here..."></textarea>
       </div>
 
       <div id="urlTab" style="display:none;">
+        <label class="input-label">Document URL</label>
         <div class="url-row">
           <input class="url-input" id="urlInput" placeholder="https://example.com/terms" />
-          <button class="decode-btn" style="width:auto; padding:0 20px;" onclick="useUrl()">Fetch</button>
+          <button style="height:40px; padding:0 14px; background:var(--accent); color:var(--ink); border:none; border-radius:4px; font-family:'Epilogue',sans-serif; font-size:13px; font-weight:500; cursor:pointer;" onclick="fetchUrl()">Fetch</button>
         </div>
-        <p style="font-size:12px; color:var(--ink-faint); margin-top:8px;">Paste the URL of any terms page and we'll extract the text for you.</p>
+        <p style="font-size:12px; color:var(--cream-faint); margin-top:8px; font-weight:300;">In the full version Tandem auto-fetches the page. For now, paste the text directly.</p>
       </div>
+
+      <div>
+        <label class="input-label">Try an example</label>
+        <div class="examples-wrap">
+          <button class="example-pill" onclick="loadExample('netflix')"><span>📺</span> Netflix Terms of Service</button>
+          <button class="example-pill" onclick="loadExample('employment')"><span>📝</span> Employment contract</button>
+          <button class="example-pill" onclick="loadExample('bnpl')"><span>💳</span> Buy now pay later</button>
+        </div>
+      </div>
+
+      <button class="decode-btn" id="decodeBtn" onclick="decode()">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5L9.5 6H14L10.5 8.5L12 13.5L8 10.5L4 13.5L5.5 8.5L2 6H6.5L8 1.5Z" fill="currentColor"/></svg>
+        Decode this document
+      </button>
     </div>
 
-    <button class="decode-btn" id="decodeBtn" onclick="decode()">
-      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 2L11 7H16L12 10.5L13.5 16L9 12.5L4.5 16L6 10.5L2 7H7L9 2Z" fill="white" opacity="0.9"/></svg>
-      Decode these terms
-    </button>
+    <div class="history-section">
+      <div class="history-label">Recent scans</div>
+      <div id="historyList"><div class="history-empty">No scans yet</div></div>
+    </div>
   </div>
 
-  <div class="status-bar" id="statusBar">
-    <div class="tiny-spinner"></div>
-    <span id="statusText">Reading document...</span>
-  </div>
+  <!-- RIGHT PANEL -->
+  <div class="right-panel">
 
-  <div class="results" id="results">
-
-    <div class="result-section">
-      <div class="section-header">
-        <div class="section-icon" style="background:#edf7f1;">📋</div>
-        <div>
-          <div class="section-title">Plain language summary</div>
-          <div class="section-sub">What this document actually says</div>
-        </div>
+    <!-- EMPTY -->
+    <div class="empty-state" id="emptyState">
+      <div class="empty-icon">⚖️</div>
+      <h3>Your decoder is ready</h3>
+      <p>Paste any legal document on the left and Tandem will break it down — red flags, fairness score, and plain English answers.</p>
+      <div class="empty-tags">
+        <span class="empty-tag">Terms & conditions</span>
+        <span class="empty-tag">Privacy policies</span>
+        <span class="empty-tag">Employment contracts</span>
+        <span class="empty-tag">Loan agreements</span>
+        <span class="empty-tag">Subscriptions</span>
       </div>
-      <div id="docName"></div>
-      <div class="summary-text" id="summaryText"></div>
     </div>
 
-    <div class="result-section">
-      <div class="section-header">
-        <div class="section-icon" style="background:#fdf0ef;">🚩</div>
-        <div>
-          <div class="section-title">Things you should know</div>
-          <div class="section-sub">Flagged clauses ranked by impact</div>
-        </div>
-      </div>
-      <div id="flagsList"></div>
+    <!-- LOADING -->
+    <div class="loading-state" id="loadingState">
+      <div class="loading-ring"></div>
+      <div class="loading-text" id="loadingText">Reading your document...</div>
+      <div class="loading-sub">This usually takes about 20–30 seconds</div>
     </div>
 
-    <div class="result-section">
-      <div class="section-header">
-        <div class="section-icon" style="background:#fef9ee;">⚖️</div>
+    <!-- RESULTS -->
+    <div class="results" id="results">
+
+      <div class="doc-header">
         <div>
-          <div class="section-title">Fairness score</div>
-          <div class="section-sub">How consumer-friendly is this agreement?</div>
+          <div class="doc-eyebrow">Document decoded</div>
+          <div class="doc-title" id="docTitle">—</div>
+        </div>
+        <div class="score-circle" id="scoreCircle">
+          <div class="num" id="scoreCircleNum">—</div>
+          <div class="denom">/ 10</div>
         </div>
       </div>
-      <div class="score-bar-wrap">
-        <div>
-          <div class="score-num" id="scoreNum">—</div>
-          <div class="score-label" id="scoreLabel">out of 10</div>
-        </div>
-        <div class="bar-wrap">
-          <div class="bar-track">
-            <div class="bar-fill" id="barFill" style="width:0%;"></div>
+
+      <!-- SUMMARY CARD -->
+      <div class="result-card">
+        <div class="card-header">
+          <div class="card-icon" style="background:rgba(74,170,110,0.12);">📋</div>
+          <div>
+            <div class="card-title">Plain language summary</div>
+            <div class="card-sub">What this document actually means for you</div>
           </div>
-          <div style="font-size:12px; color:var(--ink-faint); margin-top:6px;" id="scoreVerdict"></div>
+        </div>
+        <div class="card-body">
+          <div class="summary-text" id="summaryText"></div>
         </div>
       </div>
-    </div>
 
-    <div class="result-section">
-      <div class="section-header">
-        <div class="section-icon" style="background:#e8f0eb;">💬</div>
-        <div>
-          <div class="section-title">Ask anything</div>
-          <div class="section-sub">Get specific answers about this document</div>
+      <!-- FLAGS CARD -->
+      <div class="result-card">
+        <div class="card-header">
+          <div class="card-icon" style="background:rgba(232,92,74,0.12);">🚩</div>
+          <div>
+            <div class="card-title">Things you should know</div>
+            <div class="card-sub">Clauses ranked by how much they affect you</div>
+          </div>
+        </div>
+        <div class="card-body" id="flagsList"></div>
+      </div>
+
+      <!-- SCORE CARD -->
+      <div class="result-card">
+        <div class="card-header">
+          <div class="card-icon" style="background:rgba(232,197,71,0.1);">⚖️</div>
+          <div>
+            <div class="card-title">Fairness score</div>
+            <div class="card-sub">How consumer-friendly is this agreement?</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="score-wrap">
+            <div class="score-big" id="scoreBig">—</div>
+            <div class="score-right">
+              <div class="score-track">
+                <div class="score-fill" id="scoreFill"></div>
+              </div>
+              <div class="score-verdict" id="scoreVerdict"></div>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="ask-row">
-        <input class="ask-input" id="askInput" placeholder="e.g. Can they share my data with third parties?" onkeydown="if(event.key==='Enter') askQuestion()" />
-        <button class="ask-btn" id="askBtn" onclick="askQuestion()">Ask</button>
+
+      <!-- ASK CARD -->
+      <div class="result-card">
+        <div class="card-header">
+          <div class="card-icon" style="background:rgba(232,197,71,0.1);">💬</div>
+          <div>
+            <div class="card-title">Ask Tandem anything</div>
+            <div class="card-sub">Get specific answers about this document</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="suggestions" id="suggestions"></div>
+          <div class="ask-row">
+            <input class="ask-input" id="askInput" placeholder="e.g. Can they share my data with advertisers?" onkeydown="if(event.key==='Enter') askQuestion()" />
+            <button class="ask-btn" id="askBtn" onclick="askQuestion()">Ask</button>
+          </div>
+          <div class="qa-thread" id="qaThread"></div>
+        </div>
       </div>
-      <div class="qa-thread" id="qaThread"></div>
+
+      <button class="reset-btn" onclick="resetDecoder()">
+        ← Decode another document
+      </button>
+
     </div>
-
-    <button class="reset-btn" onclick="reset()">← Decode another document</button>
-
   </div>
-
 </div>
 
 <script>
 const EXAMPLES = {
-  netflix: `Netflix Terms of Use (excerpt)
+  netflix: `Netflix Terms of Use (excerpt)\n\n1. Membership\nYour Netflix membership is a contract between you and Netflix. The Netflix service is for your personal and non-commercial use only and may not be shared with individuals beyond your household.\n\n2. Billing and cancellation\nWe will continue to bill your Payment Method on a month-to-month basis until you cancel. You must cancel before your next billing date to avoid charges. Netflix does not provide refunds or credits for any partial-month membership periods or unwatched content.\n\n3. Disclaimers of warranties\nThe Netflix service is provided "as is" and without warranty. Netflix shall not be liable for any direct, indirect, incidental, special, consequential or punitive damages.\n\n4. Arbitration agreement\nYou and Netflix agree that any dispute arising out of these Terms will be resolved by binding arbitration. YOU ARE GIVING UP THE RIGHT TO LITIGATE ALL DISPUTES IN COURT BEFORE A JUDGE OR JURY.\n\n5. Changes to terms\nNetflix may change these Terms of Use from time to time. We will notify you at least 30 days before such changes apply to you.`,
 
-1. Netflix membership
-Your Netflix membership is a contract between you and Netflix. By becoming a member, you agree to these Terms of Use. The Netflix service and any content accessed through our service are for your personal and non-commercial use only and may not be shared with individuals beyond your household.
+  employment: `Employment Agreement (excerpt)\n\n1. At-will employment\nYour employment with the Company is at-will, meaning either you or the Company may terminate the employment relationship at any time, with or without cause, and with or without advance notice.\n\n2. Intellectual property\nAny work product, invention, or development you create during your employment — whether or not during working hours — relating to the Company's business shall be the exclusive property of the Company.\n\n3. Non-compete clause\nFor 12 months following termination, you shall not engage in any business competing with the Company within a 50-mile radius or online in any market the Company operates.\n\n4. Confidentiality\nYou shall not disclose any confidential information of the Company to any third party during or after your employment.\n\n5. Compensation changes\nThe Company reserves the right to modify your compensation, benefits, and other terms of employment at its discretion.`,
 
-2. Billing and cancellation
-We will continue to bill your Payment Method on a month-to-month basis until you cancel. You must cancel before your next billing date to avoid charges. We will send you an email confirmation when you cancel, but Netflix does not provide refunds or credits for any partial-month membership periods or unwatched content.
-
-3. Netflix passwords
-The Netflix account owner (the person whose payment method is charged) has access and control over the Netflix account. To maintain control over the account and prevent anyone from accessing the account, the account owner should maintain control over the Netflix-ready devices and should not reveal the password or payment method details to anyone. You are responsible for updating and maintaining the accuracy of the information you provide to us.
-
-4. Disclaimers of warranties and limitations on liability
-The Netflix service is provided "as is" and without warranty or condition. Netflix does not guarantee, represent, or warrant that your use of the service will be uninterrupted or error-free. Netflix shall not be liable for any direct, indirect, incidental, special, consequential or punitive damages.
-
-5. Arbitration agreement
-You and Netflix agree that any dispute, claim or controversy arising out of or relating to these Terms of Use or the breach, termination, enforcement, interpretation or validity thereof or the use of the Service will be resolved by binding arbitration. YOU ARE GIVING UP THE RIGHT TO LITIGATE (OR PARTICIPATE IN AS A PARTY OR CLASS MEMBER) ALL DISPUTES IN COURT BEFORE A JUDGE OR JURY.`,
-
-  employment: `Employment Agreement (excerpt)
-
-1. At-will employment
-Your employment with the Company is at-will, meaning either you or the Company may terminate the employment relationship at any time, with or without cause, and with or without advance notice.
-
-2. Intellectual property
-You agree that any work product, invention, discovery, development, improvement, innovation, design, idea or suggestion that you make, conceive, reduce to practice or develop, in whole or in part, during your employment, whether or not during working hours, relating to the business of the Company, shall be the exclusive property of the Company.
-
-3. Non-compete
-For a period of 12 months following your termination, you shall not, directly or indirectly, engage in any business that competes with the Company within a 50-mile radius or online in any market in which the Company operates.
-
-4. Confidentiality
-You shall not disclose any confidential information of the Company to any third party at any time during or after your employment. Confidential information includes all business information, trade secrets, customer lists, and pricing.
-
-5. Salary and benefits
-The Company will pay you a base salary of [amount] per year, payable in accordance with the Company's standard payroll schedule. The Company reserves the right to modify compensation, benefits, and other terms of employment at its discretion.`,
-
-  bnpl: `Buy Now Pay Later Agreement (excerpt)
-
-1. Payment schedule
-You agree to repay the full purchase amount in 4 equal fortnightly instalments. The first instalment is due at the time of purchase. If you miss a payment, a late fee of $10 will be applied to your account.
-
-2. Credit reporting
-We reserve the right to report missed payments to credit reporting agencies. Multiple missed payments may negatively impact your credit score and your ability to use our service in the future.
-
-3. Collection and debt recovery
-If your account remains unpaid after 60 days, we may refer your debt to a third-party debt collection agency. You will be responsible for any collection costs incurred, which may increase the total amount you owe.
-
-4. Data sharing
-We may share your personal information including purchase history and payment behaviour with our affiliated partners, marketing partners, and financial institutions for credit assessment and marketing purposes.
-
-5. Merchant disputes
-If you have a dispute with the merchant regarding the product or service purchased, you must resolve this directly with the merchant. We are not responsible for the quality, delivery, or non-delivery of goods and services.
-
-6. Changes to terms
-We reserve the right to change these terms at any time. We will notify you by email, and your continued use of the service constitutes acceptance of the new terms.`
+  bnpl: `Buy Now Pay Later Agreement (excerpt)\n\n1. Payment schedule\nYou agree to repay the full purchase amount in 4 equal fortnightly instalments. The first instalment is due at the time of purchase. A late fee of $10 applies for any missed payment.\n\n2. Credit reporting\nWe reserve the right to report missed payments to credit reporting agencies. Multiple missed payments may negatively impact your credit score.\n\n3. Debt recovery\nIf your account remains unpaid after 60 days, we may refer your debt to a third-party collection agency. You will be responsible for all collection costs incurred.\n\n4. Data sharing\nWe may share your personal information including purchase history and payment behaviour with affiliated partners, marketing partners, and financial institutions.\n\n5. Changes to terms\nWe reserve the right to change these terms at any time. Continued use of the service constitutes acceptance of the new terms.`
 };
 
 let currentDoc = '';
-let currentTab = 'paste';
+let scanHistory = [];
 
-function switchTab(tab) {
-  currentTab = tab;
+function switchTab(tab, el) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  event.target.classList.add('active');
+  el.classList.add('active');
   document.getElementById('pasteTab').style.display = tab === 'paste' ? 'block' : 'none';
   document.getElementById('urlTab').style.display = tab === 'url' ? 'block' : 'none';
 }
 
 function loadExample(key) {
   document.getElementById('tcText').value = EXAMPLES[key];
-  document.getElementById('tcText').focus();
+  document.querySelectorAll('.tab')[0].click();
 }
 
-function useUrl() {
+function fetchUrl() {
   const url = document.getElementById('urlInput').value.trim();
   if (!url) return;
-  document.getElementById('tcText').value = '';
-  switchTab('paste');
-  document.querySelectorAll('.tab')[0].classList.add('active');
-  document.querySelectorAll('.tab')[1].classList.remove('active');
-  document.getElementById('pasteTab').style.display = 'block';
-  document.getElementById('urlTab').style.display = 'none';
-  document.getElementById('tcText').value = `[Content from: ${url}]\n\nNote: In the full version, this would automatically fetch and extract the terms from the URL. For this prototype, please paste the text directly.`;
+  document.getElementById('tcText').value = `[From: ${url}]\n\nIn the full version Tandem fetches this automatically. Please paste the text directly for now.`;
+  document.querySelectorAll('.tab')[0].click();
 }
 
-function setStatus(text) {
-  const bar = document.getElementById('statusBar');
-  bar.classList.add('visible');
-  document.getElementById('statusText').textContent = text;
+function showLoading(text) {
+  document.getElementById('emptyState').style.display = 'none';
+  document.getElementById('results').classList.remove('visible');
+  document.getElementById('loadingState').classList.add('visible');
+  document.getElementById('loadingText').textContent = text;
 }
 
-function hideStatus() {
-  document.getElementById('statusBar').classList.remove('visible');
+function hideLoading() {
+  document.getElementById('loadingState').classList.remove('visible');
 }
 
 async function callClaude(systemPrompt, userMessage) {
-  const response = await fetch('https://api.anthropic.com/v1/messages', {
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -716,14 +978,18 @@ async function callClaude(systemPrompt, userMessage) {
       messages: [{ role: 'user', content: userMessage }]
     })
   });
-  const data = await response.json();
+  if (!res.ok) throw new Error(`API error: ${res.status}`);
+  const data = await res.json();
+  if (!data.content || !data.content[0]) throw new Error('Empty response');
   return data.content[0].text;
 }
 
 async function decode() {
   const text = document.getElementById('tcText').value.trim();
-  if (!text || text.length < 50) {
-    alert('Please paste some terms and conditions text first.');
+  if (text.length < 50) {
+    const ta = document.getElementById('tcText');
+    ta.style.borderColor = 'rgba(232,92,74,0.5)';
+    setTimeout(() => ta.style.borderColor = '', 2000);
     return;
   }
 
@@ -733,93 +999,129 @@ async function decode() {
   btn.disabled = true;
   btn.innerHTML = '<div class="spinner"></div> Decoding...';
 
+  const messages = [
+    'Reading your document...',
+    'Identifying key clauses...',
+    'Checking for red flags...',
+    'Calculating fairness score...',
+    'Almost done...'
+  ];
+  let idx = 0;
+  showLoading(messages[0]);
+  const interval = setInterval(() => {
+    idx = (idx + 1) % messages.length;
+    document.getElementById('loadingText').textContent = messages[idx];
+  }, 2500);
+
   try {
-    setStatus('Reading and understanding your document...');
+    const system = `You are Tandem, an AI that helps everyday people understand legal documents. Respond ONLY with valid JSON. No markdown, no backticks, no explanation. Pure JSON only.`;
 
-    const systemPrompt = `You are Terms Decoder, an AI that helps everyday people understand legal documents. You must respond ONLY with valid JSON. No preamble, no explanation, no markdown backticks. Pure JSON only.`;
-
-    const userMessage = `Analyse this legal document and return ONLY a JSON object with exactly this structure:
+    const prompt = `Analyse this legal document and return ONLY this exact JSON structure:
 {
-  "docName": "short name/type of this document (e.g. Netflix Terms of Service)",
-  "summary": "3-4 sentence plain English summary of what this document is and what it means for the person signing it",
+  "docName": "short descriptive name of this document",
+  "summary": "3-4 sentences in plain everyday English explaining what this document means for the person signing it",
   "flags": [
-    {
-      "level": "danger|warn|safe",
-      "text": "plain English description of this clause and why it matters"
-    }
+    { "level": "danger", "text": "plain English explanation" },
+    { "level": "warn", "text": "plain English explanation" },
+    { "level": "safe", "text": "plain English explanation" }
   ],
-  "score": 6,
-  "scoreVerdict": "one sentence verdict on how fair this agreement is"
+  "score": 5,
+  "scoreVerdict": "one plain English sentence on how fair this agreement is overall",
+  "suggestions": ["short question 1", "short question 2", "short question 3"]
 }
 
 Rules:
-- flags array must have 4-6 items, mix of danger/warn/safe
+- flags: 4-6 items mixing danger/warn/safe
 - danger = seriously disadvantages the consumer
-- warn = worth knowing but not critical
-- safe = a genuinely fair or consumer-friendly clause
-- score is 1-10 (1=very unfair, 10=very fair to consumer)
-- All text must be in plain everyday English, no legal jargon
+- warn = worth knowing, not critical
+- safe = genuinely consumer-friendly clause
+- score: integer 1-10 (1=very unfair, 10=very fair)
+- suggestions: 3 short follow-up questions the user might want to ask
+- Zero legal jargon. Write like you're explaining to a friend.
 
 Document to analyse:
 ${text.substring(0, 4000)}`;
 
-    const raw = await callClaude(systemPrompt, userMessage);
+    const raw = await callClaude(system, prompt);
+    clearInterval(interval);
 
     let result;
     try {
       result = JSON.parse(raw.replace(/```json|```/g, '').trim());
     } catch(e) {
-      throw new Error('Could not parse response');
+      throw new Error('Could not parse response as JSON');
     }
 
-    hideStatus();
+    hideLoading();
     renderResults(result);
+    scanHistory.unshift({ name: result.docName, score: result.score });
+    renderHistory();
 
   } catch(err) {
-    hideStatus();
-    alert('Something went wrong decoding this document. Please try again.');
-    console.error(err);
+    clearInterval(interval);
+    hideLoading();
+    document.getElementById('emptyState').style.display = 'flex';
+    console.error('Decode error:', err);
+    alert('Something went wrong decoding your document. Please try again.');
   } finally {
     btn.disabled = false;
-    btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 2L11 7H16L12 10.5L13.5 16L9 12.5L4.5 16L6 10.5L2 7H7L9 2Z" fill="white" opacity="0.9"/></svg> Decode these terms';
+    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5L9.5 6H14L10.5 8.5L12 13.5L8 10.5L4 13.5L5.5 8.5L2 6H6.5L8 1.5Z" fill="currentColor"/></svg> Decode this document';
   }
 }
 
 function renderResults(data) {
-  if (data.docName) {
-    document.getElementById('docName').innerHTML = `<div class="document-name">📄 ${data.docName}</div>`;
-  }
+  const score = Math.min(10, Math.max(1, Math.round(data.score || 5)));
+  const color = score >= 7 ? 'var(--safe)' : score >= 4 ? 'var(--warn)' : 'var(--danger)';
 
+  document.getElementById('docTitle').textContent = data.docName || 'Document';
   document.getElementById('summaryText').textContent = data.summary || '';
 
-  const flagsEl = document.getElementById('flagsList');
-  flagsEl.innerHTML = '';
-  (data.flags || []).forEach(f => {
-    const div = document.createElement('div');
-    div.className = `verdict-row ${f.level}`;
-    div.innerHTML = `<div class="verdict-dot"></div><span>${f.text}</span>`;
-    flagsEl.appendChild(div);
-  });
-
-  const score = Math.min(10, Math.max(1, Math.round(data.score || 5)));
-  document.getElementById('scoreNum').textContent = score;
+  document.getElementById('scoreBig').textContent = score;
+  document.getElementById('scoreBig').style.color = color;
   document.getElementById('scoreVerdict').textContent = data.scoreVerdict || '';
 
-  const fill = document.getElementById('barFill');
-  const pct = (score / 10) * 100;
-  fill.style.width = '0%';
-  let color = score >= 7 ? 'var(--safe)' : score >= 4 ? 'var(--warn)' : 'var(--danger)';
-  fill.style.background = color;
-  setTimeout(() => { fill.style.width = pct + '%'; }, 100);
+  const circle = document.getElementById('scoreCircle');
+  circle.style.borderColor = color;
+  circle.querySelector('.num').textContent = score;
+  circle.querySelector('.num').style.color = color;
 
-  document.getElementById('inputSection').style.display = 'none';
+  const fill = document.getElementById('scoreFill');
+  fill.style.background = color;
+  setTimeout(() => { fill.style.width = ((score / 10) * 100) + '%'; }, 200);
+
+  const flagsList = document.getElementById('flagsList');
+  flagsList.innerHTML = '';
+  (data.flags || []).forEach(f => {
+    const div = document.createElement('div');
+    div.className = `flag-item ${f.level}`;
+    div.innerHTML = `
+      <div class="flag-meta">
+        <div class="flag-dot"></div>
+        <div class="flag-level">${f.level}</div>
+      </div>
+      <div class="flag-text">${f.text}</div>`;
+    flagsList.appendChild(div);
+  });
+
+  const suggestionsEl = document.getElementById('suggestions');
+  suggestionsEl.innerHTML = '';
+  (data.suggestions || []).forEach(s => {
+    const btn = document.createElement('button');
+    btn.className = 'suggestion';
+    btn.textContent = s;
+    btn.onclick = () => { document.getElementById('askInput').value = s; askQuestion(); };
+    suggestionsEl.appendChild(btn);
+  });
+
+  document.getElementById('qaThread').innerHTML = '';
   document.getElementById('results').classList.add('visible');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 async function askQuestion() {
   const input = document.getElementById('askInput');
   const question = input.value.trim();
-  if (!question) return;
+  if (!question || !currentDoc) return;
 
   const btn = document.getElementById('askBtn');
   btn.disabled = true;
@@ -827,37 +1129,54 @@ async function askQuestion() {
   input.value = '';
 
   const thread = document.getElementById('qaThread');
-
-  const qDiv = document.createElement('div');
-  qDiv.className = 'qa-item';
-  qDiv.innerHTML = `<div class="qa-q">Q: ${question}</div><div class="qa-a" style="color:var(--ink-faint); font-style:italic;">Thinking...</div>`;
-  thread.appendChild(qDiv);
+  const item = document.createElement('div');
+  item.className = 'qa-item';
+  item.innerHTML = `
+    <div class="qa-q">${question}</div>
+    <div class="qa-a qa-loading">Tandem is thinking...</div>`;
+  thread.appendChild(item);
+  item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
   try {
-    const systemPrompt = `You are Terms Decoder. Answer questions about legal documents in plain, friendly English. Be direct and specific. Keep answers to 2-3 sentences maximum. No legal jargon.`;
-
-    const answer = await callClaude(systemPrompt, `Based on this document:\n\n${currentDoc.substring(0, 3000)}\n\nAnswer this question in plain English: ${question}`);
-
-    qDiv.querySelector('.qa-a').style.color = '';
-    qDiv.querySelector('.qa-a').style.fontStyle = '';
-    qDiv.querySelector('.qa-a').textContent = answer;
-
-  } catch(err) {
-    qDiv.querySelector('.qa-a').textContent = 'Sorry, could not get an answer. Please try again.';
+    const answer = await callClaude(
+      'You are Tandem. Answer questions about legal documents in plain, direct, friendly English. 2-3 sentences maximum. No legal jargon. Be specific to what the document actually says.',
+      `Document:\n${currentDoc.substring(0, 3000)}\n\nQuestion: ${question}`
+    );
+    item.querySelector('.qa-a').textContent = answer;
+    item.querySelector('.qa-a').classList.remove('qa-loading');
+  } catch(e) {
+    item.querySelector('.qa-a').textContent = 'Something went wrong. Please try again.';
+    item.querySelector('.qa-a').classList.remove('qa-loading');
   } finally {
     btn.disabled = false;
     btn.textContent = 'Ask';
   }
 }
 
-function reset() {
-  document.getElementById('tcText').value = '';
+function renderHistory() {
+  const el = document.getElementById('historyList');
+  if (!scanHistory.length) {
+    el.innerHTML = '<div class="history-empty">No scans yet</div>';
+    return;
+  }
+  el.innerHTML = '';
+  scanHistory.slice(0, 5).forEach(h => {
+    const s = h.score;
+    const bg = s >= 7 ? 'rgba(74,170,110,0.15)' : s >= 4 ? 'rgba(232,162,52,0.15)' : 'rgba(232,92,74,0.15)';
+    const tc = s >= 7 ? 'var(--safe)' : s >= 4 ? 'var(--warn)' : 'var(--danger)';
+    const div = document.createElement('div');
+    div.className = 'history-item';
+    div.innerHTML = `<div class="history-name">${h.name}</div><div class="history-score" style="background:${bg};color:${tc};">${s}/10</div>`;
+    el.appendChild(div);
+  });
+}
+
+function resetDecoder() {
   document.getElementById('results').classList.remove('visible');
-  document.getElementById('inputSection').style.display = 'block';
+  document.getElementById('emptyState').style.display = 'flex';
+  document.getElementById('tcText').value = '';
   document.getElementById('qaThread').innerHTML = '';
-  document.getElementById('flagsList').innerHTML = '';
   currentDoc = '';
-  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 </script>
 </body>
