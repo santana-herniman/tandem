@@ -656,114 +656,45 @@ h2 em { font-style: italic; color: var(--accent); }
 .waitlist-inner h2 { margin-bottom: 16px; }
 .waitlist-inner .section-sub { margin: 0 auto 40px; }
 
+.waitlist-form {
+  display: flex;
+  gap: 10px;
+  max-width: 480px;
+  margin: 0 auto 16px;
+}
+
+.waitlist-input {
+  flex: 1;
+  height: 52px;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 4px;
+  padding: 0 18px;
+  font-family: 'Epilogue', sans-serif;
+  font-size: 15px;
+  color: var(--cream);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.waitlist-input:focus { border-color: var(--accent); }
+.waitlist-input::placeholder { color: var(--cream-faint); }
+
 .waitlist-note {
   font-size: 13px;
   color: var(--cream-faint);
-  margin-top: 16px;
 }
 
-/* LOOPS FORM OVERRIDES — force Tandem design */
-.newsletter-form-container {
-  width: 100% !important;
-  max-width: 500px !important;
-  margin: 0 auto !important;
-}
-
-.newsletter-form {
-  display: flex !important;
-  flex-direction: row !important;
-  align-items: stretch !important;
-  justify-content: center !important;
-  gap: 10px !important;
-  width: 100% !important;
-}
-
-.newsletter-form-input {
-  flex: 1 !important;
-  height: 52px !important;
-  background: #111520 !important;
-  border: 1px solid rgba(245,240,232,0.2) !important;
-  border-radius: 4px !important;
-  padding: 0 18px !important;
-  font-family: 'Epilogue', sans-serif !important;
-  font-size: 15px !important;
-  color: #f5f0e8 !important;
-  outline: none !important;
-  box-shadow: none !important;
-  max-width: none !important;
-  min-width: 0 !important;
-  margin: 0 !important;
-  width: auto !important;
-  box-sizing: border-box !important;
-}
-
-.newsletter-form-input::placeholder { color: #7a7060 !important; }
-.newsletter-form-input:focus { border-color: #e8c547 !important; }
-
-.newsletter-form-button,
-.newsletter-loading-button {
-  height: 52px !important;
-  background: #e8c547 !important;
-  color: #0a0e1a !important;
-  border: none !important;
-  border-radius: 4px !important;
-  font-family: 'Epilogue', sans-serif !important;
-  font-size: 15px !important;
-  font-weight: 500 !important;
-  padding: 0 28px !important;
-  cursor: pointer !important;
-  white-space: nowrap !important;
-  max-width: none !important;
-  width: auto !important;
-  box-shadow: none !important;
-  flex-shrink: 0 !important;
-  line-height: 1 !important;
-  letter-spacing: 0.01em !important;
-  transition: background 0.2s !important;
-}
-
-.newsletter-form-button:hover { background: #f0d060 !important; }
-
-.newsletter-success {
-  justify-content: center !important;
-}
-
-.newsletter-success-message {
-  font-family: 'Epilogue', sans-serif !important;
-  color: #4aaa6e !important;
-  font-size: 15px !important;
-  padding: 16px 24px !important;
-  background: rgba(74,170,110,0.08) !important;
-  border: 1px solid rgba(74,170,110,0.2) !important;
-  border-radius: 4px !important;
-  max-width: 500px !important;
-  margin: 0 auto !important;
-}
-
-.newsletter-error-message {
-  font-family: 'Epilogue', sans-serif !important;
-  font-size: 14px !important;
-}
-
-.newsletter-back-button {
-  color: #7a7060 !important;
-  font-family: 'Epilogue', sans-serif !important;
-  font-size: 13px !important;
-}
-
-@media (max-width: 600px) {
-  .newsletter-form {
-    flex-direction: column !important;
-    align-items: stretch !important;
-  }
-  .newsletter-form-input {
-    width: 100% !important;
-  }
-  .newsletter-form-button,
-  .newsletter-loading-button {
-    width: 100% !important;
-    justify-content: center !important;
-  }
+.success-msg {
+  display: none;
+  padding: 16px 24px;
+  background: rgba(74,170,110,0.12);
+  border: 1px solid rgba(74,170,110,0.3);
+  border-radius: 6px;
+  color: var(--safe);
+  font-size: 15px;
+  max-width: 480px;
+  margin: 0 auto;
 }
 
 /* FOOTER */
@@ -812,6 +743,7 @@ footer {
   .steps { grid-template-columns: 1fr; }
   .steps::before { display: none; }
   .features-grid { grid-template-columns: 1fr; }
+  .waitlist-form { flex-direction: column; }
   footer { flex-direction: column; gap: 12px; text-align: center; }
 }
 </style>
@@ -854,17 +786,34 @@ footer {
       </div>
       <div class="card-body">
         <div class="doc-badge">📄 Netflix Terms of Service</div>
-        <div class="flag-item danger"><div class="flag-dot"></div>They can cancel your account at any time without refund</div>
-        <div class="flag-item danger"><div class="flag-dot"></div>Arbitration clause — you waive your right to sue in court</div>
-        <div class="flag-item warn"><div class="flag-dot"></div>Auto-renews monthly — cancellation must be before billing date</div>
-        <div class="flag-item warn"><div class="flag-dot"></div>They can change terms anytime with 30 days notice</div>
-        <div class="flag-item safe"><div class="flag-dot"></div>No selling of personal data to third parties</div>
+        <div class="flag-item danger">
+          <div class="flag-dot"></div>
+          They can cancel your account at any time without refund
+        </div>
+        <div class="flag-item danger">
+          <div class="flag-dot"></div>
+          Arbitration clause — you waive your right to sue in court
+        </div>
+        <div class="flag-item warn">
+          <div class="flag-dot"></div>
+          Auto-renews monthly — cancellation must be before billing date
+        </div>
+        <div class="flag-item warn">
+          <div class="flag-dot"></div>
+          They can change terms anytime with 30 days notice
+        </div>
+        <div class="flag-item safe">
+          <div class="flag-dot"></div>
+          No selling of personal data to third parties
+        </div>
         <div class="score-row">
           <div>
             <div class="score-label">Fairness score</div>
             <div class="score-val">4.2</div>
           </div>
-          <div class="score-track"><div class="score-fill"></div></div>
+          <div class="score-track">
+            <div class="score-fill"></div>
+          </div>
           <div style="font-size:12px; color:var(--cream-faint);">out of 10</div>
         </div>
       </div>
@@ -874,13 +823,25 @@ footer {
 
 <!-- PROOF BAR -->
 <div class="proof-bar">
-  <div class="proof-item"><div class="proof-num">91%</div><div class="proof-text">of people never read T&Cs</div></div>
+  <div class="proof-item">
+    <div class="proof-num">91%</div>
+    <div class="proof-text">of people never read T&Cs</div>
+  </div>
   <div class="proof-divider"></div>
-  <div class="proof-item"><div class="proof-num">32 pages</div><div class="proof-text">average length of a privacy policy</div></div>
+  <div class="proof-item">
+    <div class="proof-num">32 pages</div>
+    <div class="proof-text">average length of a privacy policy</div>
+  </div>
   <div class="proof-divider"></div>
-  <div class="proof-item"><div class="proof-num">250 hrs</div><div class="proof-text">to read every T&C you agree to yearly</div></div>
+  <div class="proof-item">
+    <div class="proof-num">250 hrs</div>
+    <div class="proof-text">to read every T&C you agree to yearly</div>
+  </div>
   <div class="proof-divider"></div>
-  <div class="proof-item"><div class="proof-num">30 sec</div><div class="proof-text">for Tandem to decode any document</div></div>
+  <div class="proof-item">
+    <div class="proof-num">30 sec</div>
+    <div class="proof-text">for Tandem to decode any document</div>
+  </div>
 </div>
 
 <!-- PROBLEM -->
@@ -1038,20 +999,67 @@ footer {
       <div class="section-tag" style="text-align:center;">Early access</div>
       <h2>Be the first to<br><em>know more</em></h2>
       <p class="section-sub">Tandem is launching soon. Join the waitlist and get early access, founding member pricing, and a say in what we build next.</p>
-
-      <div class="newsletter-form-container">
-        <form class="newsletter-form" id="loopsForm">
-          <input class="newsletter-form-input" id="loopsEmail" placeholder="your@email.com" required type="email" name="email" />
-          <button type="submit" class="newsletter-form-button" id="loopsSubmit">Join the Waitlist</button>
-        </form>
-        <div class="newsletter-success" id="loopsSuccess" style="display:none; align-items:center; justify-content:center; width:100%;">
-          <p class="newsletter-success-message">You're on the list. We'll be in touch soon.</p>
+      <form 
+        action="https://app.loops.so/api/newsletter-form/cmpzg5wry029u0jxhh71yep34" 
+        method="POST"
+        id="tandem-waitlist-form"
+        style="width:100%; max-width:480px; margin: 0 auto 16px;"
+        onsubmit="handleWaitlistSubmit(event)"
+      >
+        <div style="display:flex; gap:10px; width:100%;">
+          <input 
+            type="email" 
+            name="email"
+            placeholder="your@email.com" 
+            required
+            id="waitlist-email-input"
+            style="flex:1; height:52px; background:#111520; border:1px solid rgba(245,240,232,0.2); border-radius:4px; padding:0 18px; font-family:'Epilogue',sans-serif; font-size:15px; color:#f5f0e8; outline:none; min-width:0;"
+          />
+          <button 
+            type="submit"
+            id="waitlist-submit-btn"
+            style="height:52px; background:#e8c547; color:#0a0e1a; border:none; border-radius:4px; font-family:'Epilogue',sans-serif; font-size:15px; font-weight:500; padding:0 28px; cursor:pointer; white-space:nowrap; flex-shrink:0;"
+          >Join Waitlist</button>
         </div>
-        <div class="newsletter-error" id="loopsError" style="display:none; align-items:center; justify-content:center; width:100%;">
-          <p class="newsletter-error-message" id="loopsErrorMsg">Oops! Something went wrong, please try again</p>
+        <div id="waitlist-success" style="display:none; margin-top:12px; padding:14px 20px; background:rgba(74,170,110,0.08); border:1px solid rgba(74,170,110,0.2); border-radius:4px; color:#4aaa6e; font-family:'Epilogue',sans-serif; font-size:15px; text-align:center;">
+          ✓ You're on the list. We'll be in touch soon.
         </div>
-      </div>
-
+        <div id="waitlist-error" style="display:none; margin-top:12px; padding:14px 20px; background:rgba(232,92,74,0.08); border:1px solid rgba(232,92,74,0.2); border-radius:4px; color:#e85c4a; font-family:'Epilogue',sans-serif; font-size:14px; text-align:center;">
+          Oops! Something went wrong, please try again.
+        </div>
+      </form>
+      <script>
+        async function handleWaitlistSubmit(e) {
+          e.preventDefault();
+          var email = document.getElementById('waitlist-email-input').value;
+          var btn = document.getElementById('waitlist-submit-btn');
+          var success = document.getElementById('waitlist-success');
+          var error = document.getElementById('waitlist-error');
+          btn.textContent = 'Please wait...';
+          btn.disabled = true;
+          try {
+            var res = await fetch('https://app.loops.so/api/newsletter-form/cmpzg5wry029u0jxhh71yep34', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+              body: 'email=' + encodeURIComponent(email)
+            });
+            var data = await res.json();
+            if (data.success) {
+              document.querySelector('#tandem-waitlist-form div').style.display = 'none';
+              success.style.display = 'block';
+            } else {
+              error.textContent = data.message || 'Something went wrong, please try again.';
+              error.style.display = 'block';
+              btn.textContent = 'Join Waitlist';
+              btn.disabled = false;
+            }
+          } catch(err) {
+            error.style.display = 'block';
+            btn.textContent = 'Join Waitlist';
+            btn.disabled = false;
+          }
+        }
+      </script>
       <p class="waitlist-note">No spam. Unsubscribe anytime. We hate hidden clauses too.</p>
     </div>
   </div>
@@ -1064,47 +1072,12 @@ footer {
 </footer>
 
 <script>
-// Loops waitlist form
-document.getElementById('loopsForm').addEventListener('submit', function(e) {
-  e.preventDefault();
-  var email = document.getElementById('loopsEmail').value.trim();
-  var btn = document.getElementById('loopsSubmit');
-  var success = document.getElementById('loopsSuccess');
-  var error = document.getElementById('loopsError');
-  var errorMsg = document.getElementById('loopsErrorMsg');
-
-  btn.textContent = 'Please wait...';
-  btn.disabled = true;
-
-  fetch('https://app.loops.so/api/newsletter-form/cmpzg5wry029u0jxhh71yep34', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email: email })
-  })
-  .then(function(res) { return res.json(); })
-  .then(function(data) {
-    if (data.success) {
-      document.getElementById('loopsForm').style.display = 'none';
-      success.style.display = 'flex';
-    } else {
-      error.style.display = 'flex';
-      errorMsg.textContent = data.message || 'Something went wrong, please try again';
-      btn.textContent = 'Join the Waitlist';
-      btn.disabled = false;
-    }
-  })
-  .catch(function() {
-    error.style.display = 'flex';
-    errorMsg.textContent = 'Something went wrong, please try again';
-    btn.textContent = 'Join the Waitlist';
-    btn.disabled = false;
-  });
-});
-
-// Scroll animations
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(e => {
-    if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      observer.unobserve(e.target);
+    }
   });
 }, { threshold: 0.15 });
 
